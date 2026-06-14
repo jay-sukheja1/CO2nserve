@@ -50,35 +50,6 @@ CO2nserve runs completely client-side in the browser and requires no compilation
 
 ---
 
-## ☁️ Deployment Guide
-
-Since CO2nserve is a static package, deployment is completely free and takes less than a minute. Here are the three best methods:
-
-### 1. GitHub Pages (Highly Recommended)
-GitHub Pages hosts static files directly from your repository.
-1. Push your code to a GitHub repository.
-2. In the repository settings page, go to **Settings** > **Pages** (under the Code and automation section).
-3. Set the source to **Deploy from a branch**.
-4. Select the branch (usually `main`) and root folder (`/`), then click **Save**.
-5. Your app will go live within seconds at `https://<your-username>.github.io/<repo-name>/`.
-
-### 2. Vercel (Instant Deployment)
-Vercel hosts frontend assets instantly with a global CDN.
-1. Sign in to [Vercel](https://vercel.com) using your GitHub account.
-2. Click **Add New** > **Project**.
-3. Import your CO2nserve repository.
-4. Click **Deploy** (no build settings are required since it is a static directory).
-5. Vercel will assign a production URL (e.g., `co2nserve.vercel.app`).
-
-### 3. Netlify
-1. Log in to [Netlify](https://netlify.com).
-2. Choose **Import from Git** or drag-and-drop the local folder directly into the Netlify Dashboard.
-3. Click **Deploy site**.
-
----
-
-## 🧪 Scientific Methodology
-
 The emissions math model inside `js/calculator.js` uses standardized emission factors calibrated from:
 *   **EPA (US Environmental Protection Agency)**: Average grid electrical intensity, transport fuel factors, waste baselines.
 *   **IPCC (Intergovernmental Panel on Climate Change)**: Household heating sources and dietary footprint baselines.
