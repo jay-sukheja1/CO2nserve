@@ -171,7 +171,7 @@
                         <p>Adjust your details in the Calculator tab or select green lifestyle adjustments in the Reduce tab to track your progress in real-time.</p>
                     </div>
                 </div>
-                <button class="btn btn-primary" onclick="app.switchTab('calculator')">Open Calculator</button>
+                <button class="btn btn-primary" id="btn-cta-open-calculator">Open Calculator</button>
             </div>
         </section>
 
@@ -182,19 +182,19 @@
                     <div class="calc-steps-card glass-card">
                         <h3>Calculator Steps</h3>
                         <ul class="steps-list">
-                            <li class="step-item active" data-step="transport" onclick="app.setCalcStep('transport')">
+                            <li class="step-item active" id="step-transport" data-step="transport">
                                 <span class="step-num"><i class="fa-solid fa-car"></i></span>
                                 <span class="step-text">Transportation</span>
                             </li>
-                            <li class="step-item" data-step="energy" onclick="app.setCalcStep('energy')">
+                            <li class="step-item" id="step-energy" data-step="energy">
                                 <span class="step-num"><i class="fa-solid fa-bolt"></i></span>
                                 <span class="step-text">Home Energy</span>
                             </li>
-                            <li class="step-item" data-step="food" onclick="app.setCalcStep('food')">
+                            <li class="step-item" id="step-food" data-step="food">
                                 <span class="step-num"><i class="fa-solid fa-utensils"></i></span>
                                 <span class="step-text">Food & Diet</span>
                             </li>
-                            <li class="step-item" data-step="waste" onclick="app.setCalcStep('waste')">
+                            <li class="step-item" id="step-waste" data-step="waste">
                                 <span class="step-num"><i class="fa-solid fa-trash-can"></i></span>
                                 <span class="step-text">Waste & Shopping</span>
                             </li>
@@ -292,9 +292,9 @@
                                         <label for="input-flights-short">Short Flights per Year</label>
                                         <p class="input-subtext">&lt; 3 hours (e.g., regional trips)</p>
                                         <div class="number-input-spinner">
-                                            <button class="spinner-btn" onclick="app.adjustSpinner('input-flights-short', -1)"><i class="fa-solid fa-minus"></i></button>
+                                            <button class="spinner-btn" id="btn-spinner-flights-short-dec" data-spinner-target="input-flights-short" data-spinner-delta="-1"><i class="fa-solid fa-minus"></i></button>
                                             <input type="number" id="input-flights-short" min="0" max="50" value="2" readonly>
-                                            <button class="spinner-btn" onclick="app.adjustSpinner('input-flights-short', 1)"><i class="fa-solid fa-plus"></i></button>
+                                            <button class="spinner-btn" id="btn-spinner-flights-short-inc" data-spinner-target="input-flights-short" data-spinner-delta="1"><i class="fa-solid fa-plus"></i></button>
                                         </div>
                                     </div>
 
@@ -302,9 +302,9 @@
                                         <label for="input-flights-long">Long Flights per Year</label>
                                         <p class="input-subtext">&gt; 3 hours (e.g., intercontinental)</p>
                                         <div class="number-input-spinner">
-                                            <button class="spinner-btn" onclick="app.adjustSpinner('input-flights-long', -1)"><i class="fa-solid fa-minus"></i></button>
+                                            <button class="spinner-btn" id="btn-spinner-flights-long-dec" data-spinner-target="input-flights-long" data-spinner-delta="-1"><i class="fa-solid fa-minus"></i></button>
                                             <input type="number" id="input-flights-long" min="0" max="30" value="1" readonly>
-                                            <button class="spinner-btn" onclick="app.adjustSpinner('input-flights-long', 1)"><i class="fa-solid fa-plus"></i></button>
+                                            <button class="spinner-btn" id="btn-spinner-flights-long-inc" data-spinner-target="input-flights-long" data-spinner-delta="1"><i class="fa-solid fa-plus"></i></button>
                                         </div>
                                     </div>
                                 </div>
@@ -312,7 +312,7 @@
 
                             <div class="calc-nav-buttons">
                                 <div></div> <!-- Spacer -->
-                                <button class="btn btn-primary btn-icon-right" onclick="app.setCalcStep('energy')">
+                                <button class="btn btn-primary btn-icon-right" id="btn-nav-transport-to-energy">
                                     Next: Home Energy <i class="fa-solid fa-chevron-right"></i>
                                 </button>
                             </div>
@@ -390,10 +390,10 @@
                             </div>
 
                             <div class="calc-nav-buttons">
-                                <button class="btn btn-secondary btn-icon-left" onclick="app.setCalcStep('transport')">
+                                <button class="btn btn-secondary btn-icon-left" id="btn-nav-energy-to-transport">
                                     <i class="fa-solid fa-chevron-left"></i> Back
                                 </button>
-                                <button class="btn btn-primary btn-icon-right" onclick="app.setCalcStep('food')">
+                                <button class="btn btn-primary btn-icon-right" id="btn-nav-energy-to-food">
                                     Next: Food & Diet <i class="fa-solid fa-chevron-right"></i>
                                 </button>
                             </div>
@@ -475,10 +475,10 @@
                             </div>
 
                             <div class="calc-nav-buttons">
-                                <button class="btn btn-secondary btn-icon-left" onclick="app.setCalcStep('energy')">
+                                <button class="btn btn-secondary btn-icon-left" id="btn-nav-food-to-energy">
                                     <i class="fa-solid fa-chevron-left"></i> Back
                                 </button>
-                                <button class="btn btn-primary btn-icon-right" onclick="app.setCalcStep('waste')">
+                                <button class="btn btn-primary btn-icon-right" id="btn-nav-food-to-waste">
                                     Next: Waste & Shopping <i class="fa-solid fa-chevron-right"></i>
                                 </button>
                             </div>
@@ -553,10 +553,10 @@
                             </div>
 
                             <div class="calc-nav-buttons">
-                                <button class="btn btn-secondary btn-icon-left" onclick="app.setCalcStep('food')">
+                                <button class="btn btn-secondary btn-icon-left" id="btn-nav-waste-to-food">
                                     <i class="fa-solid fa-chevron-left"></i> Back
                                 </button>
-                                <button class="btn btn-success btn-icon-right" onclick="app.switchTab('dashboard')">
+                                <button class="btn btn-success btn-icon-right" id="btn-nav-waste-to-dashboard">
                                     See Dashboard <i class="fa-solid fa-check"></i>
                                 </button>
                             </div>
@@ -880,5 +880,6 @@
     <script src="js/actions.js"></script>
     <script src="js/charts.js"></script>
     <script src="js/app.js"></script>
+    <script src="js/tests.js"></script>
 </body>
 </html>
