@@ -1,5 +1,18 @@
 /**
- * CO2nserve Reduction Actions & What-If Simulator Catalog
+ * @module ActionsCatalog
+ * @description CO2nserve Reduction Actions & What-If Simulator Catalog.
+ *
+ * Each action has:
+ * - `id` {string}          — Unique identifier used for DOM elements and state
+ * - `title` {string}       — Human-readable action name
+ * - `category` {string}    — Emission category (transport | energy | food | waste)
+ * - `difficulty` {number}  — Difficulty rating out of 5
+ * - `cost` {string}        — Relative cost indicator ($, $$, $$$)
+ * - `badge` {string}       — Contextual label for UI badge
+ * - `description` {string} — Full description of the action
+ * - `calculateSavings(inputs, currentCalc)` {function} — Returns tonnes CO₂e saved/yr
+ *
+ * Exposes `window.ActionsCatalog`.
  */
 
 const ActionsCatalog = {
@@ -8,22 +21,24 @@ const ActionsCatalog = {
             id: 'switch-ev',
             title: 'Switch to Electric Vehicle',
             category: 'transport',
-            difficulty: 3, // out of 5
+            difficulty: 3,
             cost: '$$$',
             badge: 'High Impact',
             description: 'Replace your primary petroleum-powered vehicle with a fully electric car.',
-            calculateSavings(inputs, currentCalculations) {
-                // If they drive 0 miles or already have an electric car, savings = 0
+            /**
+             * Savings = (currentFactor − evFactor) × annualMiles / 1000.
+             * Returns 0 if already electric or zero miles driven.
+             * @param {Object} inputs - Current user inputs
+             * @param {Object} currentCalc - Current calculation results
+             * @returns {number} Tonnes CO₂e saved per year
+             */
+            calculateSavings(inputs, currentCalc) {
                 if (inputs.carType === 'electric' || !inputs.carMiles || inputs.carMiles === 0) {
                     return 0;
                 }
                 const miles = parseFloat(inputs.carMiles);
-                const currentType = inputs.carType;
-                
-                const currentFactor = window.CarbonCalculator.FACTORS.car[currentType] || 0.38;
+                const currentFactor = window.CarbonCalculator.FACTORS.car[inputs.carType] || 0.38;
                 const evFactor = window.CarbonCalculator.FACTORS.car.electric;
-                
-                // Difference in emissions
                 const savingsKg = miles * (currentFactor - evFactor);
                 return Math.max(0, Number((savingsKg / 1000).toFixed(2)));
             }
@@ -36,18 +51,20 @@ const ActionsCatalog = {
             cost: '$',
             badge: 'Easy Start',
             description: 'Replace half of your annual driving miles with public transit (bus or train).',
-            calculateSavings(inputs, currentCalculations) {
+            /**
+             * Savings = 50% of miles × (carFactor − transitFactor) / 1000.
+             * @param {Object} inputs - Current user inputs
+             * @param {Object} currentCalc - Current calculation results
+             * @returns {number} Tonnes CO₂e saved per year
+             */
+            calculateSavings(inputs, currentCalc) {
                 if (!inputs.carMiles || inputs.carMiles === 0) return 0;
-                
+
                 const miles = parseFloat(inputs.carMiles);
-                const carType = inputs.carType || 'petrol';
-                const carFactor = window.CarbonCalculator.FACTORS.car[carType] || 0.38;
-                
-                // Shift half of miles to transit
+                const carFactor = window.CarbonCalculator.FACTORS.car[inputs.carType || 'petrol'] || 0.38;
                 const shiftedMiles = miles * 0.5;
                 const carEmissionsSavedKg = shiftedMiles * carFactor;
                 const transitEmissionsAddedKg = shiftedMiles * window.CarbonCalculator.FACTORS.transit;
-                
                 const netSavingsKg = carEmissionsSavedKg - transitEmissionsAddedKg;
                 return Math.max(0, Number((netSavingsKg / 1000).toFixed(2)));
             }
@@ -60,13 +77,17 @@ const ActionsCatalog = {
             cost: '$',
             badge: 'Behavioral',
             description: 'Replace one long-distance flight per year with local travel or virtual meetings.',
-            calculateSavings(inputs, currentCalculations) {
+            /**
+             * Saves exactly one long-haul flight's worth of emissions (800 kg).
+             * Returns 0 if user takes no long flights.
+             * @param {Object} inputs - Current user inputs
+             * @param {Object} currentCalc - Current calculation results
+             * @returns {number} Tonnes CO₂e saved per year
+             */
+            calculateSavings(inputs, currentCalc) {
                 const longFlights = parseFloat(inputs.flightsLong) || 0;
                 if (longFlights <= 0) return 0;
-                
-                // Replaces exactly 1 long flight emissions
-                const savingsKg = window.CarbonCalculator.FACTORS.flights.long;
-                return Number((savingsKg / 1000).toFixed(2));
+                return Number((window.CarbonCalculator.FACTORS.flights.long / 1000).toFixed(2));
             }
         },
         {
@@ -77,18 +98,23 @@ const ActionsCatalog = {
             cost: '$$$',
             badge: 'Infrastructure',
             description: 'Install residential rooftop solar panels or transition to a certified green electricity supplier.',
-            calculateSavings(inputs, currentCalculations) {
+            /**
+             * Saves the remaining fossil-fuel portion of electricity emissions.
+             * Formula: annualKwh × gridFactor × (1 − currentCleanShare) / 1000.
+             * @param {Object} inputs - Current user inputs
+             * @param {Object} currentCalc - Current calculation results
+             * @returns {number} Tonnes CO₂e saved per year
+             */
+            calculateSavings(inputs, currentCalc) {
                 const electricityBill = parseFloat(inputs.electricityBill) || 0;
                 if (electricityBill === 0) return 0;
-                
+
                 const currentCleanShare = (parseFloat(inputs.cleanEnergyShare) || 0) / 100;
-                if (currentCleanShare >= 1) return 0; // already 100% clean
-                
-                // Standard emissions factors
-                const annualKwh = (electricityBill / window.CarbonCalculator.FACTORS.conversions.electricityPricePerKwh) * 12;
-                
-                // Savings is the remaining fossil fuels portion of their electricity bill
-                const currentEmissionsKg = annualKwh * window.CarbonCalculator.FACTORS.electricity * (1 - currentCleanShare);
+                if (currentCleanShare >= 1) return 0;
+
+                const CC = window.CarbonCalculator;
+                const annualKwh = (electricityBill / CC.FACTORS.conversions.electricityPricePerKwh) * 12;
+                const currentEmissionsKg = annualKwh * CC.FACTORS.electricity * (1 - currentCleanShare);
                 return Number((currentEmissionsKg / 1000).toFixed(2));
             }
         },
@@ -100,15 +126,17 @@ const ActionsCatalog = {
             cost: '$$',
             badge: 'Smart Home',
             description: 'Program heating schedules to lower consumption. Saves an average of 15% on heating costs.',
-            calculateSavings(inputs, currentCalculations) {
-                const heatingSource = inputs.heatingSource || 'none';
-                const heatingBill = parseFloat(inputs.heatingBill) || 0;
-                if (heatingSource === 'none' || heatingBill === 0) return 0;
-                
-                // 15% reduction in heating emissions
-                const currentHeatingEmissions = currentCalculations.categories.energy.heating;
-                const savings = currentHeatingEmissions * 0.15;
-                return Number(savings.toFixed(2));
+            /**
+             * Saves 15% of current heating emissions.
+             * Returns 0 if no heating source or zero heating bill.
+             * @param {Object} inputs - Current user inputs
+             * @param {Object} currentCalc - Current calculation results
+             * @returns {number} Tonnes CO₂e saved per year
+             */
+            calculateSavings(inputs, currentCalc) {
+                if ((inputs.heatingSource || 'none') === 'none') return 0;
+                if ((parseFloat(inputs.heatingBill) || 0) === 0) return 0;
+                return Number((currentCalc.categories.energy.heating * 0.15).toFixed(2));
             }
         },
         {
@@ -119,12 +147,15 @@ const ActionsCatalog = {
             cost: '$',
             badge: 'Quick Win',
             description: 'Replace incandescent lighting with energy-efficient LED bulbs throughout your home.',
-            calculateSavings(inputs, currentCalculations) {
-                // If electricity bill is $0, no savings. Otherwise, constant flat saving
-                const electricityBill = parseFloat(inputs.electricityBill) || 0;
-                if (electricityBill === 0) return 0;
-                
-                return 0.22; // Flat 220 kg CO2e saved annually
+            /**
+             * Flat 0.22 tonnes CO₂e saved annually if electricity bill > 0.
+             * @param {Object} inputs - Current user inputs
+             * @param {Object} currentCalc - Current calculation results
+             * @returns {number} Tonnes CO₂e saved per year
+             */
+            calculateSavings(inputs, currentCalc) {
+                if ((parseFloat(inputs.electricityBill) || 0) === 0) return 0;
+                return 0.22;
             }
         },
         {
@@ -135,18 +166,20 @@ const ActionsCatalog = {
             cost: '$',
             badge: 'Dietary',
             description: 'Eliminate all animal products from your food intake, switching entirely to plant-based sources.',
-            calculateSavings(inputs, currentCalculations) {
-                const currentDiet = inputs.dietProfile || 'medium-meat';
-                if (currentDiet === 'vegan') return 0;
-                
-                const currentDietEmissions = currentCalculations.categories.food.total;
-                
-                // Projected vegan food emissions with local food percentage
+            /**
+             * Savings = currentDietEmissions − projectedVeganEmissions (with local-food discount).
+             * Returns 0 if already vegan.
+             * @param {Object} inputs - Current user inputs
+             * @param {Object} currentCalc - Current calculation results
+             * @returns {number} Tonnes CO₂e saved per year
+             */
+            calculateSavings(inputs, currentCalc) {
+                if ((inputs.dietProfile || 'medium-meat') === 'vegan') return 0;
+
+                const currentDietEmissions = currentCalc.categories.food.total;
                 const localFoodPct = (parseFloat(inputs.localFoodPct) || 0) / 100;
-                const veganBaseline = window.CarbonCalculator.FACTORS.diet.vegan;
-                const projectedVeganEmissions = veganBaseline * (1.0 - (0.10 * localFoodPct));
-                
-                const savings = currentDietEmissions - projectedVeganEmissions;
+                const projectedVegan = window.CarbonCalculator.FACTORS.diet.vegan * (1.0 - (0.10 * localFoodPct));
+                const savings = currentDietEmissions - projectedVegan;
                 return Math.max(0, Number(savings.toFixed(2)));
             }
         },
@@ -158,20 +191,22 @@ const ActionsCatalog = {
             cost: '$',
             badge: 'Easy Start',
             description: 'Replace animal protein with plant-based foods just 1 day per week.',
-            calculateSavings(inputs, currentCalculations) {
+            /**
+             * Saves ~4/7 of the difference between current diet and vegetarian emissions.
+             * Returns 0 if already vegan or vegetarian (minimum floor of 0.1t).
+             * @param {Object} inputs - Current user inputs
+             * @param {Object} currentCalc - Current calculation results
+             * @returns {number} Tonnes CO₂e saved per year
+             */
+            calculateSavings(inputs, currentCalc) {
                 const currentDiet = inputs.dietProfile || 'medium-meat';
-                // If already vegan or vegetarian, meatless mondays does nothing extra
                 if (currentDiet === 'vegan' || currentDiet === 'vegetarian') return 0;
-                
-                // Shaves off ~1/7th of meat-to-veg difference
-                const dietEmissions = currentCalculations.categories.food.total;
-                const vegBaseline = window.CarbonCalculator.FACTORS.diet.vegetarian;
+
+                const dietEmissions = currentCalc.categories.food.total;
                 const localFoodPct = (parseFloat(inputs.localFoodPct) || 0) / 100;
-                const vegEmissions = vegBaseline * (1.0 - (0.10 * localFoodPct));
-                
+                const vegEmissions = window.CarbonCalculator.FACTORS.diet.vegetarian * (1.0 - (0.10 * localFoodPct));
                 const diff = dietEmissions - vegEmissions;
-                // If they eat heavy meat, savings are greater.
-                const savings = (diff > 0) ? (diff * 4 / 7) : 0.25; // scaling factor
+                const savings = (diff > 0) ? (diff * 4 / 7) : 0.25;
                 return Number(Math.max(0.1, savings).toFixed(2));
             }
         },
@@ -183,14 +218,18 @@ const ActionsCatalog = {
             cost: '$',
             badge: 'Circular Economy',
             description: 'Commit to purchasing clothes, gadgets, and furniture secondhand instead of new.',
-            calculateSavings(inputs, currentCalculations) {
+            /**
+             * Saves 25% of the shopping baseline for the current consumption level.
+             * Returns 0 for minimalist consumers (level 1).
+             * @param {Object} inputs - Current user inputs
+             * @param {Object} currentCalc - Current calculation results
+             * @returns {number} Tonnes CO₂e saved per year
+             */
+            calculateSavings(inputs, currentCalc) {
                 const shoppingLevel = parseInt(inputs.shoppingHabits) || 3;
-                if (shoppingLevel <= 1) return 0; // Already minimal
-                
-                // Reduce consumption baseline emissions by roughly 20%
+                if (shoppingLevel <= 1) return 0;
                 const shoppingBaseline = window.CarbonCalculator.FACTORS.shopping[shoppingLevel];
-                const savings = shoppingBaseline * 0.25;
-                return Number(savings.toFixed(2));
+                return Number((shoppingBaseline * 0.25).toFixed(2));
             }
         },
         {
@@ -201,17 +240,21 @@ const ActionsCatalog = {
             cost: '$',
             badge: 'Waste Reduction',
             description: 'Strictly sort paper, plastic, metals, glass, and compost food scraps to zero-out landfill waste.',
-            calculateSavings(inputs, currentCalculations) {
-                // Determine which boxes aren't checked in current inputs
-                let countUnchecked = 0;
-                if (!inputs.recyclePaper) countUnchecked++;
-                if (!inputs.recyclePlastic) countUnchecked++;
-                if (!inputs.recycleGlass) countUnchecked++;
-                if (!inputs.recycleCompost) countUnchecked++;
-                
-                // Total savings is the reduction for each unchecked box that would become checked
-                const savings = countUnchecked * window.CarbonCalculator.FACTORS.waste.recycleReduction;
-                return Number(savings.toFixed(2));
+            /**
+             * Saves recycleReduction × countOfUncheckedCategories.
+             * Counts which recycling categories the user hasn't yet adopted.
+             * @param {Object} inputs - Current user inputs
+             * @param {Object} currentCalc - Current calculation results
+             * @returns {number} Tonnes CO₂e saved per year
+             */
+            calculateSavings(inputs, currentCalc) {
+                const uncheckedCount = [
+                    !inputs.recyclePaper,
+                    !inputs.recyclePlastic,
+                    !inputs.recycleGlass,
+                    !inputs.recycleCompost
+                ].filter(Boolean).length;
+                return Number((uncheckedCount * window.CarbonCalculator.FACTORS.waste.recycleReduction).toFixed(2));
             }
         }
     ]

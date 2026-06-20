@@ -15,7 +15,10 @@
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-    <div class="app-background">
+    <!-- Skip-to-content for keyboard users -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <div class="app-background" aria-hidden="true">
         <div class="blob blob-green"></div>
         <div class="blob blob-purple"></div>
         <div class="blob blob-blue"></div>
@@ -24,39 +27,39 @@
     <header class="app-header">
         <div class="header-container">
             <div class="logo-area">
-                <div class="logo-icon-wrapper">
+                <div class="logo-icon-wrapper" aria-hidden="true">
                     <i class="fa-solid fa-leaf logo-icon"></i>
                 </div>
                 <span class="logo-text">CO<sub>2</sub>nserve</span>
             </div>
             
-            <nav class="app-nav" role="navigation">
-                <button class="nav-btn active" id="nav-dashboard" data-target="dashboard" aria-selected="true">
-                    <i class="fa-solid fa-chart-pie"></i><span>Dashboard</span>
+            <nav class="app-nav" role="tablist" aria-label="Main navigation tabs">
+                <button class="nav-btn active" id="nav-dashboard" data-target="dashboard" role="tab" aria-selected="true" aria-controls="view-dashboard" tabindex="0">
+                    <i class="fa-solid fa-chart-pie" aria-hidden="true"></i><span>Dashboard</span>
                 </button>
-                <button class="nav-btn" id="nav-calculator" data-target="calculator" aria-selected="false">
-                    <i class="fa-solid fa-calculator"></i><span>Calculator</span>
+                <button class="nav-btn" id="nav-calculator" data-target="calculator" role="tab" aria-selected="false" aria-controls="view-calculator" tabindex="-1">
+                    <i class="fa-solid fa-calculator" aria-hidden="true"></i><span>Calculator</span>
                 </button>
-                <button class="nav-btn" id="nav-actions" data-target="actions" aria-selected="false">
-                    <i class="fa-solid fa-bolt"></i><span>Reduce</span>
+                <button class="nav-btn" id="nav-actions" data-target="actions" role="tab" aria-selected="false" aria-controls="view-actions" tabindex="-1">
+                    <i class="fa-solid fa-bolt" aria-hidden="true"></i><span>Reduce</span>
                 </button>
-                <button class="nav-btn" id="nav-insights" data-target="insights" aria-selected="false">
-                    <i class="fa-solid fa-lightbulb"></i><span>Insights</span>
+                <button class="nav-btn" id="nav-insights" data-target="insights" role="tab" aria-selected="false" aria-controls="view-insights" tabindex="-1">
+                    <i class="fa-solid fa-lightbulb" aria-hidden="true"></i><span>Insights</span>
                 </button>
             </nav>
 
             <div class="header-actions">
-                <button class="theme-toggle" id="theme-toggle-btn" aria-label="Toggle Theme">
-                    <i class="fa-solid fa-sun icon-sun"></i>
-                    <i class="fa-solid fa-moon icon-moon"></i>
+                <button class="theme-toggle" id="theme-toggle-btn" aria-label="Toggle between dark and light theme">
+                    <i class="fa-solid fa-sun icon-sun" aria-hidden="true"></i>
+                    <i class="fa-solid fa-moon icon-moon" aria-hidden="true"></i>
                 </button>
             </div>
         </div>
     </header>
 
-    <main class="app-main-content">
+    <main class="app-main-content" id="main-content">
         <!-- DASHBOARD VIEW -->
-        <section id="view-dashboard" class="tab-view active" aria-labelledby="nav-dashboard">
+        <section id="view-dashboard" class="tab-view active" role="tabpanel" aria-labelledby="nav-dashboard">
             <div class="dashboard-grid">
                 <!-- Primary Metric Card -->
                 <div class="card hero-card glass-card fade-in">
@@ -64,16 +67,16 @@
                         <span class="card-subtitle">ANNUAL CO₂ FOOTPRINT</span>
                         <h2 class="card-title">Your Carbon Footprint</h2>
                     </div>
-                    <div class="metric-display">
+                    <div class="metric-display" aria-live="polite" aria-atomic="true">
                         <div class="metric-value" id="dash-total-footprint">14.2</div>
                         <div class="metric-unit">tonnes CO₂e / yr</div>
                     </div>
-                    <div class="metric-comparison" id="dash-comparison-bar-text">
-                        <span class="comparison-pill warning-pill"><i class="fa-solid fa-arrow-trend-up"></i> 24% above average</span>
+                    <div class="metric-comparison" id="dash-comparison-bar-text" aria-live="polite">
+                        <span class="comparison-pill warning-pill"><i class="fa-solid fa-arrow-trend-up" aria-hidden="true"></i> 24% above average</span>
                         <span>compared to the regional average (11.5 tonnes).</span>
                     </div>
-                    <div class="metric-savings-badge" id="dash-savings-badge-wrapper" style="display: none;">
-                        <span class="savings-pill"><i class="fa-solid fa-circle-check"></i> Saving <span id="dash-saved-co2-val">0.0</span> tonnes from actions!</span>
+                    <div class="metric-savings-badge" id="dash-savings-badge-wrapper" style="display: none;" aria-live="polite">
+                        <span class="savings-pill"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Saving <span id="dash-saved-co2-val">0.0</span> tonnes from actions!</span>
                     </div>
                 </div>
 
@@ -83,11 +86,11 @@
                         <span class="card-subtitle">VISUAL ECOLOGY</span>
                         <h2 class="card-title">Your Carbon Garden</h2>
                     </div>
-                    <div class="garden-content" id="carbon-garden-container" style="min-height: 220px; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative;">
+                    <div class="garden-content" id="carbon-garden-container" role="img" aria-label="Dynamic carbon garden visualization reflecting your emissions level">
                         <!-- SVG Garden will render here dynamically -->
                     </div>
-                    <div class="garden-footer" id="carbon-garden-status" style="border-top: 1px solid rgba(255, 255, 255, 0.05); padding-top: 10px; margin-top: 10px; text-align: center;">
-                        <span class="garden-status-text" style="font-size: 0.8rem; color: var(--text-secondary); font-weight: 500;">Your garden is thriving! Keep reducing emissions.</span>
+                    <div class="garden-footer" id="carbon-garden-status" aria-live="polite">
+                        <span class="garden-status-text">Your garden is thriving! Keep reducing emissions.</span>
                     </div>
                 </div>
 
@@ -98,10 +101,10 @@
                         <h2 class="card-title">Category Breakdown</h2>
                     </div>
                     <div class="chart-content">
-                        <div class="chart-container" id="donut-chart-container">
+                        <div class="chart-container" id="donut-chart-container" role="img" aria-label="Donut chart showing emissions breakdown by category">
                             <!-- SVG Donut Chart will render here dynamically -->
                         </div>
-                        <div class="chart-legend" id="donut-chart-legend">
+                        <div class="chart-legend" id="donut-chart-legend" aria-label="Chart legend">
                             <!-- Legend items generated dynamically -->
                         </div>
                     </div>
@@ -114,11 +117,11 @@
                         <h2 class="card-title">Global Benchmarks</h2>
                     </div>
                     <div class="benchmark-content">
-                        <div class="benchmark-list" id="benchmark-bars-container">
+                        <div class="benchmark-list" id="benchmark-bars-container" aria-live="polite">
                             <!-- Custom HTML Bar comparisons rendered dynamically -->
                         </div>
                         <div class="benchmark-target-notice">
-                            <i class="fa-solid fa-circle-info target-info-icon"></i>
+                            <i class="fa-solid fa-circle-info target-info-icon" aria-hidden="true"></i>
                             <p>To curb global warming below 1.5°C, the UN-recommended annual individual target is under <strong>2.0 tonnes CO₂e</strong> by 2030.</p>
                         </div>
                     </div>
@@ -130,30 +133,30 @@
                         <span class="card-subtitle">UNDERSTANDING YOUR IMPACT</span>
                         <h2 class="card-title">Real-world Equivalents</h2>
                     </div>
-                    <div class="equivalents-grid">
+                    <div class="equivalents-grid" aria-live="polite">
                         <div class="eq-item">
-                            <div class="eq-icon-wrapper forest"><i class="fa-solid fa-tree"></i></div>
+                            <div class="eq-icon-wrapper forest" aria-hidden="true"><i class="fa-solid fa-tree"></i></div>
                             <div class="eq-info">
                                 <span class="eq-val" id="eq-trees">710</span>
                                 <span class="eq-label">Trees matured for 10 years needed to offset</span>
                             </div>
                         </div>
                         <div class="eq-item">
-                            <div class="eq-icon-wrapper electric"><i class="fa-solid fa-bolt"></i></div>
+                            <div class="eq-icon-wrapper electric" aria-hidden="true"><i class="fa-solid fa-bolt"></i></div>
                             <div class="eq-info">
                                 <span class="eq-val" id="eq-phones">1.7M</span>
                                 <span class="eq-label">Smartphones charged to full capacity</span>
                             </div>
                         </div>
                         <div class="eq-item">
-                            <div class="eq-icon-wrapper travel"><i class="fa-solid fa-plane-departure"></i></div>
+                            <div class="eq-icon-wrapper travel" aria-hidden="true"><i class="fa-solid fa-plane-departure"></i></div>
                             <div class="eq-info">
                                 <span class="eq-val" id="eq-flights">4.7</span>
-                                <span class="eq-label">Roundtrip flights between NY & London</span>
+                                <span class="eq-label">Roundtrip flights between NY &amp; London</span>
                             </div>
                         </div>
                         <div class="eq-item">
-                            <div class="eq-icon-wrapper car"><i class="fa-solid fa-car"></i></div>
+                            <div class="eq-icon-wrapper car" aria-hidden="true"><i class="fa-solid fa-car"></i></div>
                             <div class="eq-info">
                                 <span class="eq-val" id="eq-miles">36.4k</span>
                                 <span class="eq-label">Miles driven in an average petrol car</span>
@@ -165,7 +168,7 @@
             
             <div class="quick-cta-banner glass-card fade-in delay-4">
                 <div class="cta-message">
-                    <i class="fa-solid fa-wand-magic-sparkles cta-magic-icon"></i>
+                    <i class="fa-solid fa-wand-magic-sparkles cta-magic-icon" aria-hidden="true"></i>
                     <div>
                         <h3>Want to reduce your footprint?</h3>
                         <p>Adjust your details in the Calculator tab or select green lifestyle adjustments in the Reduce tab to track your progress in real-time.</p>
@@ -176,30 +179,30 @@
         </section>
 
         <!-- CALCULATOR VIEW -->
-        <section id="view-calculator" class="tab-view" aria-labelledby="nav-calculator">
+        <section id="view-calculator" class="tab-view" role="tabpanel" aria-labelledby="nav-calculator">
             <div class="calculator-container">
                 <div class="calculator-sidebar">
                     <div class="calc-steps-card glass-card">
                         <h3>Calculator Steps</h3>
-                        <ul class="steps-list">
-                            <li class="step-item active" id="step-transport" data-step="transport">
-                                <span class="step-num"><i class="fa-solid fa-car"></i></span>
+                        <ul class="steps-list" role="tablist" aria-label="Calculator step navigation">
+                            <li class="step-item active" id="step-transport" data-step="transport" role="tab" aria-selected="true" aria-controls="calc-step-transport" tabindex="0">
+                                <span class="step-num" aria-hidden="true"><i class="fa-solid fa-car"></i></span>
                                 <span class="step-text">Transportation</span>
                             </li>
-                            <li class="step-item" id="step-energy" data-step="energy">
-                                <span class="step-num"><i class="fa-solid fa-bolt"></i></span>
+                            <li class="step-item" id="step-energy" data-step="energy" role="tab" aria-selected="false" aria-controls="calc-step-energy" tabindex="-1">
+                                <span class="step-num" aria-hidden="true"><i class="fa-solid fa-bolt"></i></span>
                                 <span class="step-text">Home Energy</span>
                             </li>
-                            <li class="step-item" id="step-food" data-step="food">
-                                <span class="step-num"><i class="fa-solid fa-utensils"></i></span>
-                                <span class="step-text">Food & Diet</span>
+                            <li class="step-item" id="step-food" data-step="food" role="tab" aria-selected="false" aria-controls="calc-step-food" tabindex="-1">
+                                <span class="step-num" aria-hidden="true"><i class="fa-solid fa-utensils"></i></span>
+                                <span class="step-text">Food &amp; Diet</span>
                             </li>
-                            <li class="step-item" id="step-waste" data-step="waste">
-                                <span class="step-num"><i class="fa-solid fa-trash-can"></i></span>
-                                <span class="step-text">Waste & Shopping</span>
+                            <li class="step-item" id="step-waste" data-step="waste" role="tab" aria-selected="false" aria-controls="calc-step-waste" tabindex="-1">
+                                <span class="step-num" aria-hidden="true"><i class="fa-solid fa-trash-can"></i></span>
+                                <span class="step-text">Waste &amp; Shopping</span>
                             </li>
                         </ul>
-                        <div class="live-footprint-ticker">
+                        <div class="live-footprint-ticker" aria-live="polite" aria-atomic="true">
                             <span class="ticker-label">Current Footprint</span>
                             <div class="ticker-value-row">
                                 <span class="ticker-value" id="calc-live-total">14.2</span>
@@ -211,10 +214,10 @@
 
                 <div class="calculator-form-area">
                     <!-- STEP: TRANSPORTATION -->
-                    <div class="calc-step-view active" id="calc-step-transport">
+                    <div class="calc-step-view active" id="calc-step-transport" role="tabpanel" aria-labelledby="step-transport">
                         <div class="card glass-card">
                             <div class="card-header">
-                                <div class="card-header-icon-wrapper transport"><i class="fa-solid fa-car"></i></div>
+                                <div class="card-header-icon-wrapper transport" aria-hidden="true"><i class="fa-solid fa-car"></i></div>
                                 <div>
                                     <span class="card-subtitle">STEP 1 OF 4</span>
                                     <h2 class="card-title">Transportation Emissions</h2>
@@ -230,7 +233,7 @@
                                         <span class="value-bubble" id="val-car-miles">10,000 miles</span>
                                     </div>
                                     <input type="range" class="custom-slider" id="input-car-miles" min="0" max="30000" step="500" value="10000">
-                                    <div class="slider-labels">
+                                    <div class="slider-labels" aria-hidden="true">
                                         <span>0 mi</span>
                                         <span>15,000 mi</span>
                                         <span>30,000 mi</span>
@@ -238,37 +241,39 @@
                                 </div>
 
                                 <div class="form-row sub-row">
-                                    <label for="input-car-type">Primary Vehicle Fuel/Engine Type</label>
-                                    <div class="vehicle-options-grid">
-                                        <label class="vehicle-option-card">
-                                            <input type="radio" name="car-type" value="petrol" checked>
-                                            <div class="vehicle-card-inner">
-                                                <i class="fa-solid fa-gas-pump"></i>
-                                                <span>Petrol</span>
-                                            </div>
-                                        </label>
-                                        <label class="vehicle-option-card">
-                                            <input type="radio" name="car-type" value="diesel">
-                                            <div class="vehicle-card-inner">
-                                                <i class="fa-solid fa-oil-can"></i>
-                                                <span>Diesel</span>
-                                            </div>
-                                        </label>
-                                        <label class="vehicle-option-card">
-                                            <input type="radio" name="car-type" value="hybrid">
-                                            <div class="vehicle-card-inner">
-                                                <i class="fa-solid fa-charging-station"></i>
-                                                <span>Hybrid</span>
-                                            </div>
-                                        </label>
-                                        <label class="vehicle-option-card">
-                                            <input type="radio" name="car-type" value="electric">
-                                            <div class="vehicle-card-inner">
-                                                <i class="fa-solid fa-plug-circle-bolt"></i>
-                                                <span>Electric</span>
-                                            </div>
-                                        </label>
-                                    </div>
+                                    <fieldset class="radio-fieldset">
+                                        <legend class="fieldset-legend">Primary Vehicle Fuel/Engine Type</legend>
+                                        <div class="vehicle-options-grid">
+                                            <label class="vehicle-option-card">
+                                                <input type="radio" name="car-type" value="petrol" checked>
+                                                <div class="vehicle-card-inner">
+                                                    <i class="fa-solid fa-gas-pump" aria-hidden="true"></i>
+                                                    <span>Petrol</span>
+                                                </div>
+                                            </label>
+                                            <label class="vehicle-option-card">
+                                                <input type="radio" name="car-type" value="diesel">
+                                                <div class="vehicle-card-inner">
+                                                    <i class="fa-solid fa-oil-can" aria-hidden="true"></i>
+                                                    <span>Diesel</span>
+                                                </div>
+                                            </label>
+                                            <label class="vehicle-option-card">
+                                                <input type="radio" name="car-type" value="hybrid">
+                                                <div class="vehicle-card-inner">
+                                                    <i class="fa-solid fa-charging-station" aria-hidden="true"></i>
+                                                    <span>Hybrid</span>
+                                                </div>
+                                            </label>
+                                            <label class="vehicle-option-card">
+                                                <input type="radio" name="car-type" value="electric">
+                                                <div class="vehicle-card-inner">
+                                                    <i class="fa-solid fa-plug-circle-bolt" aria-hidden="true"></i>
+                                                    <span>Electric</span>
+                                                </div>
+                                            </label>
+                                        </div>
+                                    </fieldset>
                                 </div>
 
                                 <!-- Public Transit -->
@@ -279,7 +284,7 @@
                                     </div>
                                     <p class="input-subtext">Includes buses, light rail, subway, and commuter trains.</p>
                                     <input type="range" class="custom-slider" id="input-transit-hours" min="0" max="40" step="1" value="2">
-                                    <div class="slider-labels">
+                                    <div class="slider-labels" aria-hidden="true">
                                         <span>None</span>
                                         <span>20 hrs/wk</span>
                                         <span>40 hrs/wk</span>
@@ -292,9 +297,9 @@
                                         <label for="input-flights-short">Short Flights per Year</label>
                                         <p class="input-subtext">&lt; 3 hours (e.g., regional trips)</p>
                                         <div class="number-input-spinner">
-                                            <button class="spinner-btn" id="btn-spinner-flights-short-dec" data-spinner-target="input-flights-short" data-spinner-delta="-1"><i class="fa-solid fa-minus"></i></button>
-                                            <input type="number" id="input-flights-short" min="0" max="50" value="2" readonly>
-                                            <button class="spinner-btn" id="btn-spinner-flights-short-inc" data-spinner-target="input-flights-short" data-spinner-delta="1"><i class="fa-solid fa-plus"></i></button>
+                                            <button class="spinner-btn" id="btn-spinner-flights-short-dec" data-spinner-target="input-flights-short" data-spinner-delta="-1" aria-label="Decrease short flights"><i class="fa-solid fa-minus" aria-hidden="true"></i></button>
+                                            <input type="number" id="input-flights-short" min="0" max="50" value="2" readonly aria-label="Short flights per year">
+                                            <button class="spinner-btn" id="btn-spinner-flights-short-inc" data-spinner-target="input-flights-short" data-spinner-delta="1" aria-label="Increase short flights"><i class="fa-solid fa-plus" aria-hidden="true"></i></button>
                                         </div>
                                     </div>
 
@@ -302,9 +307,9 @@
                                         <label for="input-flights-long">Long Flights per Year</label>
                                         <p class="input-subtext">&gt; 3 hours (e.g., intercontinental)</p>
                                         <div class="number-input-spinner">
-                                            <button class="spinner-btn" id="btn-spinner-flights-long-dec" data-spinner-target="input-flights-long" data-spinner-delta="-1"><i class="fa-solid fa-minus"></i></button>
-                                            <input type="number" id="input-flights-long" min="0" max="30" value="1" readonly>
-                                            <button class="spinner-btn" id="btn-spinner-flights-long-inc" data-spinner-target="input-flights-long" data-spinner-delta="1"><i class="fa-solid fa-plus"></i></button>
+                                            <button class="spinner-btn" id="btn-spinner-flights-long-dec" data-spinner-target="input-flights-long" data-spinner-delta="-1" aria-label="Decrease long flights"><i class="fa-solid fa-minus" aria-hidden="true"></i></button>
+                                            <input type="number" id="input-flights-long" min="0" max="30" value="1" readonly aria-label="Long flights per year">
+                                            <button class="spinner-btn" id="btn-spinner-flights-long-inc" data-spinner-target="input-flights-long" data-spinner-delta="1" aria-label="Increase long flights"><i class="fa-solid fa-plus" aria-hidden="true"></i></button>
                                         </div>
                                     </div>
                                 </div>
@@ -313,17 +318,17 @@
                             <div class="calc-nav-buttons">
                                 <div></div> <!-- Spacer -->
                                 <button class="btn btn-primary btn-icon-right" id="btn-nav-transport-to-energy">
-                                    Next: Home Energy <i class="fa-solid fa-chevron-right"></i>
+                                    Next: Home Energy <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
                                 </button>
                             </div>
                         </div>
                     </div>
 
                     <!-- STEP: HOME ENERGY -->
-                    <div class="calc-step-view" id="calc-step-energy">
+                    <div class="calc-step-view" id="calc-step-energy" role="tabpanel" aria-labelledby="step-energy">
                         <div class="card glass-card">
                             <div class="card-header">
-                                <div class="card-header-icon-wrapper energy"><i class="fa-solid fa-bolt"></i></div>
+                                <div class="card-header-icon-wrapper energy" aria-hidden="true"><i class="fa-solid fa-bolt"></i></div>
                                 <div>
                                     <span class="card-subtitle">STEP 2 OF 4</span>
                                     <h2 class="card-title">Household Energy Use</h2>
@@ -339,7 +344,7 @@
                                         <span class="value-bubble" id="val-electricity-bill">$100 / month</span>
                                     </div>
                                     <input type="range" class="custom-slider" id="input-electricity-bill" min="0" max="500" step="10" value="100">
-                                    <div class="slider-labels">
+                                    <div class="slider-labels" aria-hidden="true">
                                         <span>$0</span>
                                         <span>$250</span>
                                         <span>$500</span>
@@ -354,7 +359,7 @@
                                     </div>
                                     <p class="input-subtext">Percentage of your electric plan supplied by solar, wind, hydro, or nuclear power.</p>
                                     <input type="range" class="custom-slider" id="input-clean-energy-share" min="0" max="100" step="5" value="20">
-                                    <div class="slider-labels">
+                                    <div class="slider-labels" aria-hidden="true">
                                         <span>0% (Standard Grid)</span>
                                         <span>50%</span>
                                         <span>100% (Clean Power)</span>
@@ -380,7 +385,7 @@
                                             <span class="value-bubble" id="val-heating-bill">$80 / month</span>
                                         </div>
                                         <input type="range" class="custom-slider" id="input-heating-bill" min="0" max="400" step="10" value="80">
-                                        <div class="slider-labels">
+                                        <div class="slider-labels" aria-hidden="true">
                                             <span>$0</span>
                                             <span>$200</span>
                                             <span>$400</span>
@@ -391,83 +396,85 @@
 
                             <div class="calc-nav-buttons">
                                 <button class="btn btn-secondary btn-icon-left" id="btn-nav-energy-to-transport">
-                                    <i class="fa-solid fa-chevron-left"></i> Back
+                                    <i class="fa-solid fa-chevron-left" aria-hidden="true"></i> Back
                                 </button>
                                 <button class="btn btn-primary btn-icon-right" id="btn-nav-energy-to-food">
-                                    Next: Food & Diet <i class="fa-solid fa-chevron-right"></i>
+                                    Next: Food &amp; Diet <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
                                 </button>
                             </div>
                         </div>
                     </div>
 
                     <!-- STEP: FOOD & DIET -->
-                    <div class="calc-step-view" id="calc-step-food">
+                    <div class="calc-step-view" id="calc-step-food" role="tabpanel" aria-labelledby="step-food">
                         <div class="card glass-card">
                             <div class="card-header">
-                                <div class="card-header-icon-wrapper food"><i class="fa-solid fa-utensils"></i></div>
+                                <div class="card-header-icon-wrapper food" aria-hidden="true"><i class="fa-solid fa-utensils"></i></div>
                                 <div>
                                     <span class="card-subtitle">STEP 3 OF 4</span>
-                                    <h2 class="card-title">Diet & Food Footprint</h2>
+                                    <h2 class="card-title">Diet &amp; Food Footprint</h2>
                                 </div>
                             </div>
                             <p class="card-desc">The food industry (especially livestock and transportation) contributes heavily to climate change. Choose the layout that best describes your diet.</p>
 
                             <div class="form-group-grid">
                                 <div class="form-row">
-                                    <label>Choose your Dietary Profile</label>
-                                    <div class="diet-options-grid">
-                                        <label class="diet-option-card">
-                                            <input type="radio" name="diet-profile" value="heavy-meat">
-                                            <div class="diet-card-inner">
-                                                <div class="diet-icon-emoji">🥩</div>
-                                                <span class="diet-title">Heavy Meat</span>
-                                                <span class="diet-desc">Red meat, poultry, or seafood almost daily.</span>
-                                            </div>
-                                        </label>
-                                        <label class="diet-option-card">
-                                            <input type="radio" name="diet-profile" value="medium-meat" checked>
-                                            <div class="diet-card-inner">
-                                                <div class="diet-icon-emoji">🍗</div>
-                                                <span class="diet-title">Average Meat</span>
-                                                <span class="diet-desc">Moderate meat eating, poultry, occasional fish.</span>
-                                            </div>
-                                        </label>
-                                        <label class="diet-option-card">
-                                            <input type="radio" name="diet-profile" value="low-meat">
-                                            <div class="diet-card-inner">
-                                                <div class="diet-icon-emoji">🐟</div>
-                                                <span class="diet-title">Low Meat</span>
-                                                <span class="diet-desc">Rare red meat, mostly vegetarian/pescatarian.</span>
-                                            </div>
-                                        </label>
-                                        <label class="diet-option-card">
-                                            <input type="radio" name="diet-profile" value="vegetarian">
-                                            <div class="diet-card-inner">
-                                                <div class="diet-icon-emoji">🧀</div>
-                                                <span class="diet-title">Vegetarian</span>
-                                                <span class="diet-desc">No meat or seafood. Includes eggs and dairy.</span>
-                                            </div>
-                                        </label>
-                                        <label class="diet-option-card">
-                                            <input type="radio" name="diet-profile" value="vegan">
-                                            <div class="diet-card-inner">
-                                                <div class="diet-icon-emoji">🌱</div>
-                                                <span class="diet-title">Vegan</span>
-                                                <span class="diet-desc">Strictly plant-based. Zero animal products.</span>
-                                            </div>
-                                        </label>
-                                    </div>
+                                    <fieldset class="radio-fieldset">
+                                        <legend class="fieldset-legend">Choose your Dietary Profile</legend>
+                                        <div class="diet-options-grid">
+                                            <label class="diet-option-card">
+                                                <input type="radio" name="diet-profile" value="heavy-meat">
+                                                <div class="diet-card-inner">
+                                                    <div class="diet-icon-emoji" aria-hidden="true">🥩</div>
+                                                    <span class="diet-title">Heavy Meat</span>
+                                                    <span class="diet-desc">Red meat, poultry, or seafood almost daily.</span>
+                                                </div>
+                                            </label>
+                                            <label class="diet-option-card">
+                                                <input type="radio" name="diet-profile" value="medium-meat" checked>
+                                                <div class="diet-card-inner">
+                                                    <div class="diet-icon-emoji" aria-hidden="true">🍗</div>
+                                                    <span class="diet-title">Average Meat</span>
+                                                    <span class="diet-desc">Moderate meat eating, poultry, occasional fish.</span>
+                                                </div>
+                                            </label>
+                                            <label class="diet-option-card">
+                                                <input type="radio" name="diet-profile" value="low-meat">
+                                                <div class="diet-card-inner">
+                                                    <div class="diet-icon-emoji" aria-hidden="true">🐟</div>
+                                                    <span class="diet-title">Low Meat</span>
+                                                    <span class="diet-desc">Rare red meat, mostly vegetarian/pescatarian.</span>
+                                                </div>
+                                            </label>
+                                            <label class="diet-option-card">
+                                                <input type="radio" name="diet-profile" value="vegetarian">
+                                                <div class="diet-card-inner">
+                                                    <div class="diet-icon-emoji" aria-hidden="true">🧀</div>
+                                                    <span class="diet-title">Vegetarian</span>
+                                                    <span class="diet-desc">No meat or seafood. Includes eggs and dairy.</span>
+                                                </div>
+                                            </label>
+                                            <label class="diet-option-card">
+                                                <input type="radio" name="diet-profile" value="vegan">
+                                                <div class="diet-card-inner">
+                                                    <div class="diet-icon-emoji" aria-hidden="true">🌱</div>
+                                                    <span class="diet-title">Vegan</span>
+                                                    <span class="diet-desc">Strictly plant-based. Zero animal products.</span>
+                                                </div>
+                                            </label>
+                                        </div>
+                                    </fieldset>
                                 </div>
 
                                 <!-- Local Sourcing -->
                                 <div class="form-row">
                                     <div class="row-header">
-                                        <label for="input-local-food-pct">Local & Seasonal Food Focus</label>
+                                        <label for="input-local-food-pct">Local &amp; Seasonal Food Focus</label>
                                         <span class="value-bubble" id="val-local-food-pct">Moderate (40%)</span>
                                     </div>
                                     <p class="input-subtext">Buying local and seasonal food minimizes emissions from international flight imports and refrigerated storage.</p>
                                     <input type="range" class="custom-slider" id="input-local-food-pct" min="0" max="100" step="10" value="40">
-                                    <div class="slider-labels">
+                                    <div class="slider-labels" aria-hidden="true">
                                         <span>Rarely local (0%)</span>
                                         <span>Mostly local (100%)</span>
                                     </div>
@@ -476,23 +483,23 @@
 
                             <div class="calc-nav-buttons">
                                 <button class="btn btn-secondary btn-icon-left" id="btn-nav-food-to-energy">
-                                    <i class="fa-solid fa-chevron-left"></i> Back
+                                    <i class="fa-solid fa-chevron-left" aria-hidden="true"></i> Back
                                 </button>
                                 <button class="btn btn-primary btn-icon-right" id="btn-nav-food-to-waste">
-                                    Next: Waste & Shopping <i class="fa-solid fa-chevron-right"></i>
+                                    Next: Waste &amp; Shopping <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
                                 </button>
                             </div>
                         </div>
                     </div>
 
                     <!-- STEP: WASTE & SHOPPING -->
-                    <div class="calc-step-view" id="calc-step-waste">
+                    <div class="calc-step-view" id="calc-step-waste" role="tabpanel" aria-labelledby="step-waste">
                         <div class="card glass-card">
                             <div class="card-header">
-                                <div class="card-header-icon-wrapper waste"><i class="fa-solid fa-trash-can"></i></div>
+                                <div class="card-header-icon-wrapper waste" aria-hidden="true"><i class="fa-solid fa-trash-can"></i></div>
                                 <div>
                                     <span class="card-subtitle">STEP 4 OF 4</span>
-                                    <h2 class="card-title">Waste & Goods Consumption</h2>
+                                    <h2 class="card-title">Waste &amp; Goods Consumption</h2>
                                 </div>
                             </div>
                             <p class="card-desc">Manufactured items, electronics, clothes, and waste streams create structural lifecycle emissions. Let us know your consumption patterns.</p>
@@ -501,12 +508,12 @@
                                 <!-- Shopping habits -->
                                 <div class="form-row">
                                     <div class="row-header">
-                                        <label for="input-shopping-habits">Shopping & Material Consumption</label>
+                                        <label for="input-shopping-habits">Shopping &amp; Material Consumption</label>
                                         <span class="value-bubble" id="val-shopping-habits">Average Consumer</span>
                                     </div>
                                     <p class="input-subtext">Reflects clothing, gadgets, furniture, and general packaging purchases.</p>
                                     <input type="range" class="custom-slider" id="input-shopping-habits" min="1" max="5" step="1" value="3">
-                                    <div class="slider-labels slider-label-categories">
+                                    <div class="slider-labels slider-label-categories" aria-hidden="true">
                                         <span>Minimalist</span>
                                         <span>Frugal</span>
                                         <span>Average</span>
@@ -517,47 +524,49 @@
 
                                 <!-- Recycling checklists -->
                                 <div class="form-row">
-                                    <label>Household Recycling Practices</label>
-                                    <p class="input-subtext">Check the boxes for materials you regularly sort and recycle.</p>
-                                    <div class="recycle-checklist">
-                                        <label class="checkbox-card">
-                                            <input type="checkbox" id="recycle-paper" checked>
-                                            <div class="checkbox-inner">
-                                                <i class="fa-solid fa-newspaper text-green"></i>
-                                                <span>Paper & Cardboard</span>
-                                            </div>
-                                        </label>
-                                        <label class="checkbox-card">
-                                            <input type="checkbox" id="recycle-plastic" checked>
-                                            <div class="checkbox-inner">
-                                                <i class="fa-solid fa-bottle-water text-blue"></i>
-                                                <span>Plastics (Bottles/Tubs)</span>
-                                            </div>
-                                        </label>
-                                        <label class="checkbox-card">
-                                            <input type="checkbox" id="recycle-glass">
-                                            <div class="checkbox-inner">
-                                                <i class="fa-solid fa-wine-bottle text-purple"></i>
-                                                <span>Glass & Metal Cans</span>
-                                            </div>
-                                        </label>
-                                        <label class="checkbox-card">
-                                            <input type="checkbox" id="recycle-compost">
-                                            <div class="checkbox-inner">
-                                                <i class="fa-solid fa-basket-shopping text-orange"></i>
-                                                <span>Food Waste / Composting</span>
-                                            </div>
-                                        </label>
-                                    </div>
+                                    <fieldset class="radio-fieldset">
+                                        <legend class="fieldset-legend">Household Recycling Practices</legend>
+                                        <p class="input-subtext">Check the boxes for materials you regularly sort and recycle.</p>
+                                        <div class="recycle-checklist">
+                                            <label class="checkbox-card">
+                                                <input type="checkbox" id="recycle-paper" checked>
+                                                <div class="checkbox-inner">
+                                                    <i class="fa-solid fa-newspaper text-green" aria-hidden="true"></i>
+                                                    <span>Paper &amp; Cardboard</span>
+                                                </div>
+                                            </label>
+                                            <label class="checkbox-card">
+                                                <input type="checkbox" id="recycle-plastic" checked>
+                                                <div class="checkbox-inner">
+                                                    <i class="fa-solid fa-bottle-water text-blue" aria-hidden="true"></i>
+                                                    <span>Plastics (Bottles/Tubs)</span>
+                                                </div>
+                                            </label>
+                                            <label class="checkbox-card">
+                                                <input type="checkbox" id="recycle-glass">
+                                                <div class="checkbox-inner">
+                                                    <i class="fa-solid fa-wine-bottle text-purple" aria-hidden="true"></i>
+                                                    <span>Glass &amp; Metal Cans</span>
+                                                </div>
+                                            </label>
+                                            <label class="checkbox-card">
+                                                <input type="checkbox" id="recycle-compost">
+                                                <div class="checkbox-inner">
+                                                    <i class="fa-solid fa-basket-shopping text-orange" aria-hidden="true"></i>
+                                                    <span>Food Waste / Composting</span>
+                                                </div>
+                                            </label>
+                                        </div>
+                                    </fieldset>
                                 </div>
                             </div>
 
                             <div class="calc-nav-buttons">
                                 <button class="btn btn-secondary btn-icon-left" id="btn-nav-waste-to-food">
-                                    <i class="fa-solid fa-chevron-left"></i> Back
+                                    <i class="fa-solid fa-chevron-left" aria-hidden="true"></i> Back
                                 </button>
                                 <button class="btn btn-success btn-icon-right" id="btn-nav-waste-to-dashboard">
-                                    See Dashboard <i class="fa-solid fa-check"></i>
+                                    See Dashboard <i class="fa-solid fa-check" aria-hidden="true"></i>
                                 </button>
                             </div>
                         </div>
@@ -567,21 +576,21 @@
         </section>
 
         <!-- ACTIONS VIEW -->
-        <section id="view-actions" class="tab-view" aria-labelledby="nav-actions">
+        <section id="view-actions" class="tab-view" role="tabpanel" aria-labelledby="nav-actions">
             <!-- Simulated Impact Banner -->
-            <div class="saving-simulator-banner glass-card fade-in">
+            <div class="saving-simulator-banner glass-card fade-in" aria-live="polite">
                 <div class="simulator-inner">
                     <div class="sim-metric-group">
                         <div class="sim-metric">
                             <span class="sim-label">Baseline Footprint</span>
                             <span class="sim-val val-baseline" id="sim-base-footprint">14.2t</span>
                         </div>
-                        <div class="sim-divider"><i class="fa-solid fa-arrow-right"></i></div>
+                        <div class="sim-divider" aria-hidden="true"><i class="fa-solid fa-arrow-right"></i></div>
                         <div class="sim-metric">
                             <span class="sim-label">Committed Reductions</span>
                             <span class="sim-val val-savings text-emerald" id="sim-total-savings">-0.0t</span>
                         </div>
-                        <div class="sim-divider"><i class="fa-solid fa-equals"></i></div>
+                        <div class="sim-divider" aria-hidden="true"><i class="fa-solid fa-equals"></i></div>
                         <div class="sim-metric">
                             <span class="sim-label">Projected Footprint</span>
                             <span class="sim-val val-projected" id="sim-projected-footprint">14.2t</span>
@@ -592,7 +601,7 @@
                             <span>Percent Reduction: <strong id="sim-percent-reduction">0%</strong></span>
                             <span>Sustainable Target: <strong>&lt; 2.0 tonnes</strong></span>
                         </div>
-                        <div class="sim-progress-track">
+                        <div class="sim-progress-track" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-label="Reduction progress">
                             <div class="sim-progress-bar" id="sim-reduction-bar" style="width: 0%;"></div>
                         </div>
                     </div>
@@ -605,12 +614,12 @@
                     <h2 class="view-title">Commit to Positive Actions</h2>
                     <p class="view-desc">Adopt green habits to simulate how much carbon you can shave off your annual total.</p>
                 </div>
-                <div class="action-filters" id="action-category-filters">
-                    <button class="filter-btn active" data-filter="all">All</button>
-                    <button class="filter-btn" data-filter="transport"><i class="fa-solid fa-car"></i> Transport</button>
-                    <button class="filter-btn" data-filter="energy"><i class="fa-solid fa-bolt"></i> Energy</button>
-                    <button class="filter-btn" data-filter="food"><i class="fa-solid fa-utensils"></i> Diet</button>
-                    <button class="filter-btn" data-filter="waste"><i class="fa-solid fa-trash-can"></i> Waste</button>
+                <div class="action-filters" id="action-category-filters" role="toolbar" aria-label="Filter actions by category">
+                    <button class="filter-btn active" data-filter="all" aria-pressed="true">All</button>
+                    <button class="filter-btn" data-filter="transport" aria-pressed="false"><i class="fa-solid fa-car" aria-hidden="true"></i> Transport</button>
+                    <button class="filter-btn" data-filter="energy" aria-pressed="false"><i class="fa-solid fa-bolt" aria-hidden="true"></i> Energy</button>
+                    <button class="filter-btn" data-filter="food" aria-pressed="false"><i class="fa-solid fa-utensils" aria-hidden="true"></i> Diet</button>
+                    <button class="filter-btn" data-filter="waste" aria-pressed="false"><i class="fa-solid fa-trash-can" aria-hidden="true"></i> Waste</button>
                 </div>
             </div>
 
@@ -621,13 +630,13 @@
         </section>
 
         <!-- INSIGHTS VIEW -->
-        <section id="view-insights" class="tab-view" aria-labelledby="nav-insights">
+        <section id="view-insights" class="tab-view" role="tabpanel" aria-labelledby="nav-insights">
             <div class="insights-view-layout">
                 <!-- Left Column: Insights List -->
                 <div class="insights-main-column">
                     <div class="insights-header-card glass-card fade-in">
                         <div class="insights-header-inner">
-                            <div class="insights-mascot">
+                            <div class="insights-mascot" aria-hidden="true">
                                 <i class="fa-solid fa-wand-magic-sparkles mascot-icon"></i>
                             </div>
                             <div>
@@ -637,28 +646,28 @@
                         </div>
                     </div>
 
-                    <div class="insights-list-container" id="personalized-insights-list">
+                    <div class="insights-list-container" id="personalized-insights-list" aria-live="polite">
                         <!-- Dynamic Insights HTML goes here -->
                     </div>
 
                     <!-- Climate Pledge Certificate Card -->
-                    <div class="card pledge-card glass-card fade-in delay-3" style="margin-top: 24px;">
+                    <div class="card pledge-card glass-card fade-in delay-3 mt-6">
                         <div class="card-header">
                             <span class="card-subtitle">COMMIT AND SHARE</span>
                             <h2 class="card-title">Climate Pledge Certificate</h2>
                         </div>
-                        <p class="card-desc text-small" style="margin-bottom: 20px; font-size: 0.85rem; color: var(--text-secondary); line-height: 1.4;">Formalize your commitment to carbon reduction. Input your name to generate a custom, high-resolution Climate Pledge Certificate showcasing your baseline emissions, committed savings, action checklist, and earned badges. Share it or print it to inspire others!</p>
+                        <p class="card-desc">Formalize your commitment to carbon reduction. Input your name to generate a custom, high-resolution Climate Pledge Certificate showcasing your baseline emissions, committed savings, action checklist, and earned badges. Share it or print it to inspire others!</p>
                         
                         <div class="pledge-form-group">
                             <div class="form-row">
-                                <label for="input-pledge-name" style="margin-bottom: 8px; display: block; font-weight: 500;">Your Full Name</label>
-                                <div class="pledge-input-row" style="display: flex; gap: 12px;">
-                                    <input type="text" id="input-pledge-name" placeholder="Enter name for certificate" class="custom-select" style="text-align: left; padding: 12px 16px; flex: 1; border: 1px solid var(--border-card); border-radius: var(--border-radius-md); background: rgba(0,0,0,0.2); color: var(--text-primary);">
-                                    <button class="btn btn-success" id="btn-generate-certificate" style="flex-shrink: 0; justify-content: center; padding: 12px 20px;">
-                                        <i class="fa-solid fa-file-signature"></i> Generate Certificate
+                                <label for="input-pledge-name" class="pledge-form-label">Your Full Name</label>
+                                <div class="pledge-input-row">
+                                    <input type="text" id="input-pledge-name" placeholder="Enter name for certificate" class="custom-select pledge-name-input">
+                                    <button class="btn btn-success btn-generate-cert" id="btn-generate-certificate">
+                                        <i class="fa-solid fa-file-signature" aria-hidden="true"></i> Generate Certificate
                                     </button>
                                 </div>
-                                <span class="input-error" id="pledge-name-error" style="display:none; color: var(--color-danger); font-size: 0.8rem; margin-top: 4px;">Please enter your name.</span>
+                                <span class="input-error" id="pledge-name-error">Please enter your name.</span>
                             </div>
                         </div>
                     </div>
@@ -673,8 +682,8 @@
                             <h2 class="card-title">Reduction Goal</h2>
                         </div>
                         <div class="goal-interactive-area">
-                            <div class="goal-radial-container">
-                                <svg class="radial-progress-svg" viewBox="0 0 100 100">
+                            <div class="goal-radial-container" role="img" aria-label="Radial progress showing reduction percentage">
+                                <svg class="radial-progress-svg" viewBox="0 0 100 100" aria-hidden="true">
                                     <circle class="radial-bg" cx="50" cy="50" r="40"></circle>
                                     <circle class="radial-progress" id="goal-progress-circle" cx="50" cy="50" r="40" stroke-dasharray="251.2" stroke-dashoffset="251.2"></circle>
                                 </svg>
@@ -694,8 +703,8 @@
                                 </select>
                             </div>
 
-                            <div class="goal-status-box" id="goal-status-message">
-                                <span class="goal-status-badge inactive"><i class="fa-solid fa-circle-notch fa-spin"></i> Pending inputs</span>
+                            <div class="goal-status-box" id="goal-status-message" aria-live="polite">
+                                <span class="goal-status-badge inactive"><i class="fa-solid fa-circle-notch fa-spin" aria-hidden="true"></i> Pending inputs</span>
                                 <p class="goal-status-text">Select actions in the <strong>Reduce</strong> tab to reach your 20% reduction target!</p>
                             </div>
                         </div>
@@ -707,128 +716,130 @@
                             <span class="card-subtitle">BEYOND REDUCTION</span>
                             <h2 class="card-title">Net-Zero Offset Simulator</h2>
                         </div>
-                        <p class="offset-desc text-small" style="margin-bottom: 16px; font-size: 0.85rem; color: var(--text-secondary); line-height: 1.4;">Offset your remaining emissions by supporting verified carbon capture and reduction initiatives.</p>
+                        <p class="offset-desc">Offset your remaining emissions by supporting verified carbon capture and reduction initiatives.</p>
                         
-                        <div class="offset-interactive-group" style="display: flex; flex-direction: column; gap: 16px;">
+                        <div class="offset-interactive-group">
                             <div class="offset-portfolio-selector">
-                                <label style="margin-bottom: 8px; display: block; font-weight: 500;">Select Offset Project</label>
-                                <div class="portfolio-cards-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px;">
-                                    <label class="portfolio-option-card active" data-portfolio="forestry" style="cursor: pointer; border: 1px solid var(--border-card-hover); border-radius: var(--border-radius-md); padding: 12px; background: var(--color-green-glow); display: block; transition: all var(--transition-fast);">
-                                        <input type="radio" name="offset-portfolio" value="forestry" checked style="display:none;">
-                                        <div class="portfolio-card-inner" style="display: flex; flex-direction: column; align-items: center; gap: 4px; text-align: center;">
-                                            <i class="fa-solid fa-tree text-green" style="font-size: 1.25rem; color: var(--color-green);"></i>
-                                            <span class="p-title" style="font-size: 0.85rem; font-weight: 600;">Forestry</span>
-                                            <span class="p-cost" style="font-size: 0.75rem; color: var(--text-secondary);">$15 / ton</span>
-                                        </div>
-                                    </label>
-                                    <label class="portfolio-option-card" data-portfolio="wind-solar" style="cursor: pointer; border: 1px solid var(--border-card); border-radius: var(--border-radius-md); padding: 12px; background: rgba(0,0,0,0.1); display: block; transition: all var(--transition-fast);">
-                                        <input type="radio" name="offset-portfolio" value="wind-solar" style="display:none;">
-                                        <div class="portfolio-card-inner" style="display: flex; flex-direction: column; align-items: center; gap: 4px; text-align: center;">
-                                            <i class="fa-solid fa-wind" style="font-size: 1.25rem; color: var(--color-blue);"></i>
-                                            <span class="p-title" style="font-size: 0.85rem; font-weight: 600;">Wind & Solar</span>
-                                            <span class="p-cost" style="font-size: 0.75rem; color: var(--text-secondary);">$25 / ton</span>
-                                        </div>
-                                    </label>
-                                    <label class="portfolio-option-card" data-portfolio="direct-air" style="cursor: pointer; border: 1px solid var(--border-card); border-radius: var(--border-radius-md); padding: 12px; background: rgba(0,0,0,0.1); display: block; transition: all var(--transition-fast);">
-                                        <input type="radio" name="offset-portfolio" value="direct-air" style="display:none;">
-                                        <div class="portfolio-card-inner" style="display: flex; flex-direction: column; align-items: center; gap: 4px; text-align: center;">
-                                            <i class="fa-solid fa-cloud-arrow-down" style="font-size: 1.25rem; color: var(--color-purple);"></i>
-                                            <span class="p-title" style="font-size: 0.85rem; font-weight: 600;">Direct Air</span>
-                                            <span class="p-cost" style="font-size: 0.75rem; color: var(--text-secondary);">$120 / ton</span>
-                                        </div>
-                                    </label>
-                                    <label class="portfolio-option-card" data-portfolio="balanced" style="cursor: pointer; border: 1px solid var(--border-card); border-radius: var(--border-radius-md); padding: 12px; background: rgba(0,0,0,0.1); display: block; transition: all var(--transition-fast);">
-                                        <input type="radio" name="offset-portfolio" value="balanced" style="display:none;">
-                                        <div class="portfolio-card-inner" style="display: flex; flex-direction: column; align-items: center; gap: 4px; text-align: center;">
-                                            <i class="fa-solid fa-scale-balanced" style="font-size: 1.25rem; color: var(--color-yellow);"></i>
-                                            <span class="p-title" style="font-size: 0.85rem; font-weight: 600;">Balanced</span>
-                                            <span class="p-cost" style="font-size: 0.75rem; color: var(--text-secondary);">$35 / ton</span>
-                                        </div>
-                                    </label>
-                                </div>
+                                <fieldset class="radio-fieldset">
+                                    <legend class="fieldset-legend">Select Offset Project</legend>
+                                    <div class="portfolio-cards-grid">
+                                        <label class="portfolio-option-card active" data-portfolio="forestry">
+                                            <input type="radio" name="offset-portfolio" value="forestry" checked style="display:none;">
+                                            <div class="portfolio-card-inner">
+                                                <i class="fa-solid fa-tree text-green" aria-hidden="true"></i>
+                                                <span class="p-title">Forestry</span>
+                                                <span class="p-cost">$15 / ton</span>
+                                            </div>
+                                        </label>
+                                        <label class="portfolio-option-card" data-portfolio="wind-solar">
+                                            <input type="radio" name="offset-portfolio" value="wind-solar" style="display:none;">
+                                            <div class="portfolio-card-inner">
+                                                <i class="fa-solid fa-wind" aria-hidden="true"></i>
+                                                <span class="p-title">Wind &amp; Solar</span>
+                                                <span class="p-cost">$25 / ton</span>
+                                            </div>
+                                        </label>
+                                        <label class="portfolio-option-card" data-portfolio="direct-air">
+                                            <input type="radio" name="offset-portfolio" value="direct-air" style="display:none;">
+                                            <div class="portfolio-card-inner">
+                                                <i class="fa-solid fa-cloud-arrow-down" aria-hidden="true"></i>
+                                                <span class="p-title">Direct Air</span>
+                                                <span class="p-cost">$120 / ton</span>
+                                            </div>
+                                        </label>
+                                        <label class="portfolio-option-card" data-portfolio="balanced">
+                                            <input type="radio" name="offset-portfolio" value="balanced" style="display:none;">
+                                            <div class="portfolio-card-inner">
+                                                <i class="fa-solid fa-scale-balanced" aria-hidden="true"></i>
+                                                <span class="p-title">Balanced</span>
+                                                <span class="p-cost">$35 / ton</span>
+                                            </div>
+                                        </label>
+                                    </div>
+                                </fieldset>
                             </div>
 
                             <div class="form-row">
-                                <div class="row-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                                    <label for="input-offset-pct" style="font-weight: 500;">Offset Percentage</label>
-                                    <span class="value-bubble" id="val-offset-pct" style="background: var(--color-green-glow); color: var(--color-green); padding: 2px 8px; border-radius: var(--border-radius-sm); font-size: 0.8rem; font-weight: 600;">0%</span>
+                                <div class="offset-row-header">
+                                    <label for="input-offset-pct">Offset Percentage</label>
+                                    <span class="offset-value-bubble" id="val-offset-pct">0%</span>
                                 </div>
-                                <input type="range" class="custom-slider" id="input-offset-pct" min="0" max="100" step="5" value="0" style="width: 100%;">
-                                <div class="slider-labels" style="display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">
+                                <input type="range" class="custom-slider w-full" id="input-offset-pct" min="0" max="100" step="5" value="0">
+                                <div class="offset-slider-labels" aria-hidden="true">
                                     <span>0%</span>
                                     <span>50%</span>
                                     <span>100% (Net-Zero)</span>
                                 </div>
                             </div>
 
-                            <div class="offset-cost-summary" style="background: rgba(255,255,255,0.03); border: 1px solid var(--border-card); border-radius: var(--border-radius-md); padding: 12px; display: flex; flex-direction: column; gap: 8px; font-size: 0.85rem;">
-                                <div class="cost-item" style="display: flex; justify-content: space-between;">
-                                    <span class="cost-lbl" style="color: var(--text-secondary);">Remaining Footprint:</span>
-                                    <span class="cost-val" id="offset-remaining-emissions" style="font-weight: 600;">0.0 tonnes</span>
+                            <div class="offset-cost-summary" aria-live="polite">
+                                <div class="cost-item">
+                                    <span class="cost-lbl">Remaining Footprint:</span>
+                                    <span class="cost-val" id="offset-remaining-emissions">0.0 tonnes</span>
                                 </div>
-                                <div class="cost-item" style="display: flex; justify-content: space-between;">
-                                    <span class="cost-lbl" style="color: var(--text-secondary);">Amount Offset:</span>
-                                    <span class="cost-val text-green" id="offset-amount-val" style="font-weight: 600; color: var(--color-green);">0.0 tonnes</span>
+                                <div class="cost-item">
+                                    <span class="cost-lbl">Amount Offset:</span>
+                                    <span class="cost-val text-green" id="offset-amount-val">0.0 tonnes</span>
                                 </div>
-                                <div class="cost-item total-cost-row" style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 8px; margin-top: 4px;">
-                                    <span class="cost-lbl" style="font-weight: 600;">Estimated Cost:</span>
-                                    <div class="cost-nums" style="text-align: right; display: flex; flex-direction: column;">
-                                        <span class="cost-val text-yellow" id="offset-cost-annual" style="font-weight: 700; color: var(--color-yellow); font-size: 0.95rem;">$0 / yr</span>
-                                        <span class="cost-subtext" id="offset-cost-monthly" style="font-size: 0.75rem; color: var(--text-muted);">($0.00 / mo)</span>
+                                <div class="cost-item total-cost-row">
+                                    <span class="cost-lbl">Estimated Cost:</span>
+                                    <div class="cost-nums">
+                                        <span class="cost-val-annual" id="offset-cost-annual">$0 / yr</span>
+                                        <span class="cost-val-monthly" id="offset-cost-monthly">($0.00 / mo)</span>
                                     </div>
                                 </div>
                             </div>
 
-                            <button class="btn btn-primary w-full" id="btn-achieve-netzero" style="margin-top: 8px; justify-content: center; width: 100%;">
-                                <i class="fa-solid fa-award"></i> Achieve Certified Net-Zero
+                            <button class="btn btn-primary btn-netzero" id="btn-achieve-netzero">
+                                <i class="fa-solid fa-award" aria-hidden="true"></i> Achieve Certified Net-Zero
                             </button>
                         </div>
                     </div>
 
                     <!-- Eco-Trivia Quiz Card -->
-                    <div class="card trivia-card glass-card fade-in delay-4" style="margin-top: 24px;">
+                    <div class="card trivia-card glass-card fade-in delay-4 mt-6">
                         <div class="card-header">
                             <span class="card-subtitle">CLIMATE EDUCATION</span>
                             <h2 class="card-title">Climate Myth-Buster Quiz</h2>
                         </div>
-                        <div id="trivia-container" class="trivia-widget-inner" style="min-height: 120px;">
-                            <div class="trivia-start-screen" id="trivia-start-screen" style="display: flex; flex-direction: column; gap: 12px;">
-                                <p class="text-small" style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.4;">Test your environmental knowledge! Debunk common carbon myths, score 4/5 or higher, and earn the <strong>Climate Scholar</strong> badge on your certificate.</p>
-                                <button class="btn btn-secondary" id="btn-start-trivia" style="justify-content: center; width: 100%; border: 1px solid var(--border-card-hover); background: var(--color-green-glow); color: var(--color-green);">
-                                    <i class="fa-solid fa-gamepad"></i> Start Quiz
+                        <div id="trivia-container" class="trivia-widget-inner">
+                            <div class="trivia-start-screen" id="trivia-start-screen">
+                                <p class="trivia-start-text">Test your environmental knowledge! Debunk common carbon myths, score 4/5 or higher, and earn the <strong>Climate Scholar</strong> badge on your certificate.</p>
+                                <button class="btn btn-secondary btn-start-trivia-styled" id="btn-start-trivia">
+                                    <i class="fa-solid fa-gamepad" aria-hidden="true"></i> Start Quiz
                                 </button>
                             </div>
                             
-                            <div class="trivia-question-screen" id="trivia-question-screen" style="display:none; flex-direction: column; gap: 12px;">
-                                <div class="trivia-progress" style="display: flex; flex-direction: column; gap: 4px;">
-                                    <span class="text-small" style="font-size: 0.75rem; color: var(--text-secondary);">Question <span id="trivia-q-num">1</span> of 5</span>
-                                    <div class="trivia-progress-bar-track" style="height: 6px; background: rgba(255,255,255,0.06); border-radius: 3px; overflow: hidden; width: 100%;">
-                                        <div class="trivia-progress-bar-fill" id="trivia-q-progress" style="width:20%; height: 100%; background: linear-gradient(90deg, var(--color-green), var(--color-blue)); transition: width 0.3s ease;"></div>
+                            <div class="trivia-question-screen" id="trivia-question-screen">
+                                <div class="trivia-progress">
+                                    <span class="trivia-progress-label">Question <span id="trivia-q-num">1</span> of 5</span>
+                                    <div class="trivia-progress-bar-track" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" aria-label="Quiz progress">
+                                        <div class="trivia-progress-bar-fill" id="trivia-q-progress" style="width:20%;"></div>
                                     </div>
                                 </div>
-                                <h3 class="trivia-question-text" id="trivia-question-text" style="font-size: 1rem; font-weight: 600; line-height: 1.4; margin: 4px 0;">Loading question...</h3>
-                                <div class="trivia-options-grid" id="trivia-options-container" style="display: flex; flex-direction: column; gap: 8px;">
+                                <h3 class="trivia-question-text" id="trivia-question-text">Loading question...</h3>
+                                <div class="trivia-options-grid" id="trivia-options-container" role="group" aria-label="Answer options">
                                     <!-- Options populated dynamically -->
                                 </div>
-                                <div class="trivia-feedback-box" id="trivia-feedback-box" style="display:none; background: rgba(255,255,255,0.03); border: 1px solid var(--border-card); border-radius: var(--border-radius-md); padding: 12px; display: flex; flex-direction: column; gap: 8px; margin-top: 8px;">
-                                    <div class="trivia-feedback-header" style="display: flex; align-items: center; gap: 8px;">
-                                        <i class="fa-solid" id="trivia-feedback-icon" style="font-size: 1.1rem;"></i>
-                                        <strong id="trivia-feedback-title" style="font-size: 0.9rem;">Correct!</strong>
+                                <div class="trivia-feedback-box" id="trivia-feedback-box">
+                                    <div class="trivia-feedback-header">
+                                        <i class="fa-solid" id="trivia-feedback-icon"></i>
+                                        <strong id="trivia-feedback-title">Correct!</strong>
                                     </div>
-                                    <p class="trivia-feedback-text" id="trivia-feedback-text" style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.4;">Explanation here...</p>
-                                    <button class="btn btn-primary" id="btn-next-trivia" style="margin-top: 4px; justify-content: center; align-self: flex-start; padding: 8px 16px;">Next Question <i class="fa-solid fa-chevron-right"></i></button>
+                                    <p class="trivia-feedback-text" id="trivia-feedback-text">Explanation here...</p>
+                                    <button class="btn btn-primary btn-next-trivia-styled" id="btn-next-trivia">Next Question <i class="fa-solid fa-chevron-right" aria-hidden="true"></i></button>
                                 </div>
                             </div>
                             
-                            <div class="trivia-result-screen" id="trivia-result-screen" style="display:none; flex-direction: column; align-items: center; text-align: center; gap: 12px; padding: 12px 0;">
-                                <div class="trivia-score-circle" style="width: 80px; height: 80px; border-radius: 50%; border: 4px solid var(--color-green); display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--color-green-glow);">
-                                    <span class="score-val" id="trivia-score-display" style="font-size: 1.5rem; font-weight: 700; color: var(--color-green);">0/5</span>
-                                    <span class="score-lbl" style="font-size: 0.65rem; text-transform: uppercase; color: var(--text-secondary); font-weight: 500;">Score</span>
+                            <div class="trivia-result-screen" id="trivia-result-screen">
+                                <div class="trivia-score-circle">
+                                    <span class="trivia-score-val" id="trivia-score-display">0/5</span>
+                                    <span class="trivia-score-lbl">Score</span>
                                 </div>
-                                <h3 class="result-title" id="trivia-result-title" style="font-size: 1.1rem; font-weight: 700;">Quiz Completed!</h3>
-                                <p class="result-text text-small" id="trivia-result-text" style="font-size: 0.85rem; color: var(--text-secondary); max-width: 90%; line-height: 1.4;">Feedback text...</p>
-                                <div class="result-buttons" style="width: 100%; display: flex; gap: 8px; justify-content: center;">
-                                    <button class="btn btn-secondary" id="btn-retry-trivia" style="justify-content: center; flex: 1;"><i class="fa-solid fa-rotate-right"></i> Retry Quiz</button>
+                                <h3 class="trivia-result-title" id="trivia-result-title">Quiz Completed!</h3>
+                                <p class="trivia-result-text" id="trivia-result-text">Feedback text...</p>
+                                <div class="trivia-result-buttons">
+                                    <button class="btn btn-secondary" id="btn-retry-trivia"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i> Retry Quiz</button>
                                 </div>
                             </div>
                         </div>
@@ -844,36 +855,36 @@
             <div class="footer-links">
                 <a href="#" class="footer-link">Methodology</a>
                 <a href="#" class="footer-link">Privacy Policy</a>
-                <a href="#" class="footer-link">API & Factors</a>
+                <a href="#" class="footer-link">API &amp; Factors</a>
             </div>
         </div>
     </footer>
 
     <!-- Certificate Preview Modal -->
-    <div class="modal-backdrop" id="certificate-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(10px); z-index: 1000; align-items: center; justify-content: center; padding: 20px;">
-        <div class="modal-content glass-card" style="max-width: 680px; width: 100%; border-radius: var(--border-radius-lg); padding: 24px; max-height: 90vh; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; border: 1px solid var(--border-card-hover); background: rgba(15, 25, 20, 0.95); box-shadow: 0 20px 50px rgba(0,0,0,0.5);">
-            <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 12px;">
-                <h3 class="modal-title" style="font-size: 1.25rem; font-weight: 700; display: flex; align-items: center; gap: 8px; font-family: var(--font-heading); color: var(--text-primary);"><i class="fa-solid fa-certificate" style="color: var(--color-green);"></i> Your Climate Pledge Certificate</h3>
-                <button class="modal-close-btn" id="btn-close-modal" style="background: none; border: none; color: var(--text-secondary); cursor: pointer; font-size: 1.25rem; transition: color var(--transition-fast);"><i class="fa-solid fa-xmark"></i></button>
+    <div class="modal-backdrop" id="certificate-modal" role="dialog" aria-modal="true" aria-labelledby="modal-cert-title" style="display: none;">
+        <div class="modal-content glass-card">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modal-cert-title"><i class="fa-solid fa-certificate" aria-hidden="true"></i> Your Climate Pledge Certificate</h3>
+                <button class="modal-close-btn" id="btn-close-modal" aria-label="Close certificate modal"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
             </div>
-            <div class="modal-body" style="display: flex; flex-direction: column; gap: 16px; align-items: center;">
-                <div class="certificate-preview-container" style="border: 2px dashed rgba(255,255,255,0.1); border-radius: var(--border-radius-md); padding: 8px; width: 100%; max-width: 500px; background: rgba(0,0,0,0.2); box-shadow: inset 0 0 20px rgba(0,0,0,0.5); display: flex; justify-content: center;">
-                    <canvas id="certificate-canvas" style="display: none;"></canvas>
-                    <img id="certificate-img-preview" alt="Pledge Certificate Preview" class="certificate-preview-img" style="width: 100%; border-radius: 4px; display: block; box-shadow: 0 8px 24px rgba(0,0,0,0.3);">
+            <div class="modal-body">
+                <div class="certificate-preview-container">
+                    <canvas id="certificate-canvas" style="display: none;" aria-label="Climate pledge certificate canvas"></canvas>
+                    <img id="certificate-img-preview" alt="Pledge Certificate Preview" class="certificate-preview-img">
                 </div>
-                <p class="modal-desc text-small" style="font-size: 0.8rem; color: var(--text-secondary); text-align: center; line-height: 1.4;">This certificate is rendered dynamically. Click the button below to download the high-resolution PNG for printing or sharing!</p>
+                <p class="modal-desc">This certificate is rendered dynamically. Click the button below to download the high-resolution PNG for printing or sharing!</p>
             </div>
-            <div class="modal-footer" style="display: flex; justify-content: flex-end; gap: 12px; border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 16px; margin-top: 4px;">
-                <button class="btn btn-secondary" id="btn-close-modal-alt" style="padding: 10px 20px;">Close</button>
-                <a href="#" download="CO2nserve-Climate-Pledge.png" class="btn btn-success" id="btn-download-certificate" style="padding: 10px 20px; justify-content: center; text-decoration: none;">
-                    <i class="fa-solid fa-download"></i> Download High-Res PNG
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="btn-close-modal-alt">Close</button>
+                <a href="#" download="CO2nserve-Climate-Pledge.png" class="btn btn-success btn-download-cert" id="btn-download-certificate">
+                    <i class="fa-solid fa-download" aria-hidden="true"></i> Download High-Res PNG
                 </a>
             </div>
         </div>
     </div>
 
     <!-- Ambient Canvas Overlay for Confetti -->
-    <canvas id="confetti-canvas" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 2000;"></canvas>
+    <canvas id="confetti-canvas" aria-hidden="true"></canvas>
 
     <!-- App Modules -->
     <script src="js/calculator.js"></script>

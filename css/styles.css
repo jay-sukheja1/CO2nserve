@@ -2313,3 +2313,568 @@ body {
 [data-theme="light"] .modal-content {
     background: rgba(255, 255, 255, 0.98) !important;
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   ACCESSIBILITY ENHANCEMENTS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Skip-to-content link — hidden until focused */
+.skip-link {
+    position: absolute;
+    top: -100%;
+    left: 16px;
+    z-index: 9999;
+    padding: 12px 24px;
+    background: var(--color-green);
+    color: #ffffff;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 0 0 var(--border-radius-md) var(--border-radius-md);
+    text-decoration: none;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    transition: top 0.2s ease;
+}
+.skip-link:focus {
+    top: 0;
+    outline: none;
+}
+
+/* Focus-visible outlines for all interactive elements */
+.nav-btn:focus-visible,
+.btn:focus-visible,
+.filter-btn:focus-visible,
+.theme-toggle:focus-visible,
+.spinner-btn:focus-visible,
+.custom-slider:focus-visible,
+.custom-select:focus-visible,
+.step-item:focus-visible,
+.legend-item:focus-visible,
+.footer-link:focus-visible,
+.trivia-option-btn:focus-visible,
+.portfolio-option-card:focus-visible,
+.modal-close-btn:focus-visible,
+.vehicle-option-card:focus-visible .vehicle-card-inner,
+.diet-option-card:focus-visible .diet-card-inner,
+.checkbox-card:focus-visible .checkbox-inner {
+    outline: 2px solid var(--color-green);
+    outline-offset: 2px;
+}
+
+/* Toggle switches — show focus on the visible slider when input focused */
+.adopt-switch input:focus-visible + .slider-switch {
+    outline: 2px solid var(--color-green);
+    outline-offset: 2px;
+}
+
+/* Radio/checkbox cards — focus the inner card */
+.vehicle-option-card input:focus-visible + .vehicle-card-inner,
+.diet-option-card input:focus-visible + .diet-card-inner,
+.checkbox-card input:focus-visible + .checkbox-inner {
+    outline: 2px solid var(--color-green);
+    outline-offset: 2px;
+}
+
+/* Fieldset/legend for radio groups */
+.radio-fieldset {
+    border: none;
+    padding: 0;
+    margin: 0;
+}
+.radio-fieldset > .fieldset-legend {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+    display: block;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   INLINE STYLE REPLACEMENTS — Offset Simulator
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.offset-interactive-group {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+.offset-portfolio-label {
+    margin-bottom: 8px;
+    display: block;
+    font-weight: 500;
+}
+.portfolio-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+}
+.portfolio-option-card {
+    cursor: pointer;
+    border: 1px solid var(--border-card);
+    border-radius: var(--border-radius-md);
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.1);
+    display: block;
+    transition: all var(--transition-fast);
+}
+.portfolio-card-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    text-align: center;
+}
+.portfolio-card-inner > i {
+    font-size: 1.25rem;
+}
+.portfolio-card-inner .p-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+.portfolio-card-inner .p-cost {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+.offset-row-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+}
+.offset-row-header label {
+    font-weight: 500;
+}
+.offset-value-bubble {
+    background: var(--color-green-glow);
+    color: var(--color-green);
+    padding: 2px 8px;
+    border-radius: var(--border-radius-sm);
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+.offset-slider-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-top: 4px;
+}
+.offset-cost-summary {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-card);
+    border-radius: var(--border-radius-md);
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 0.85rem;
+}
+.cost-item {
+    display: flex;
+    justify-content: space-between;
+}
+.cost-item .cost-lbl {
+    color: var(--text-secondary);
+}
+.cost-item .cost-val {
+    font-weight: 600;
+}
+.cost-item.total-cost-row {
+    align-items: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    padding-top: 8px;
+    margin-top: 4px;
+}
+.cost-item.total-cost-row .cost-lbl {
+    font-weight: 600;
+}
+.cost-nums {
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+}
+.cost-val-annual {
+    font-weight: 700;
+    color: var(--color-yellow);
+    font-size: 0.95rem;
+}
+.cost-val-monthly {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+.btn-netzero {
+    margin-top: 8px;
+    justify-content: center;
+    width: 100%;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   INLINE STYLE REPLACEMENTS — Trivia Widget
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.trivia-widget-inner {
+    min-height: 120px;
+}
+.trivia-start-screen {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.trivia-start-text {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    line-height: 1.4;
+}
+.btn-start-trivia-styled {
+    justify-content: center;
+    width: 100%;
+    border: 1px solid var(--border-card-hover);
+    background: var(--color-green-glow);
+    color: var(--color-green);
+}
+.trivia-question-screen {
+    display: none;
+    flex-direction: column;
+    gap: 12px;
+}
+.trivia-progress {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.trivia-progress-label {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+.trivia-progress-bar-track {
+    height: 6px;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 3px;
+    overflow: hidden;
+    width: 100%;
+}
+.trivia-progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--color-green), var(--color-blue));
+    transition: width 0.3s ease;
+}
+.trivia-question-text {
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.4;
+    margin: 4px 0;
+}
+.trivia-options-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.trivia-feedback-box {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-card);
+    border-radius: var(--border-radius-md);
+    padding: 12px;
+    display: none;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 8px;
+}
+.trivia-feedback-box.visible {
+    display: flex;
+}
+.trivia-feedback-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.trivia-feedback-header i {
+    font-size: 1.1rem;
+}
+.trivia-feedback-header strong {
+    font-size: 0.9rem;
+}
+.trivia-feedback-text {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    line-height: 1.4;
+}
+.btn-next-trivia-styled {
+    margin-top: 4px;
+    justify-content: center;
+    align-self: flex-start;
+    padding: 8px 16px;
+}
+.trivia-result-screen {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 12px;
+    padding: 12px 0;
+}
+.trivia-score-circle {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 4px solid var(--color-green);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-green-glow);
+}
+.trivia-score-val {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-green);
+}
+.trivia-score-lbl {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+.trivia-result-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+.trivia-result-text {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    max-width: 90%;
+    line-height: 1.4;
+}
+.trivia-result-buttons {
+    width: 100%;
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+}
+.trivia-result-buttons .btn {
+    justify-content: center;
+    flex: 1;
+}
+.option-chevron {
+    opacity: 0.3;
+    font-size: 0.8rem;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   INLINE STYLE REPLACEMENTS — Certificate Modal
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(10px);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+.modal-content {
+    max-width: 680px;
+    width: 100%;
+    border-radius: var(--border-radius-lg);
+    padding: 24px;
+    max-height: 90vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    border: 1px solid var(--border-card-hover);
+    background: rgba(15, 25, 20, 0.95);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+}
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding-bottom: 12px;
+}
+.modal-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-heading);
+    color: var(--text-primary);
+}
+.modal-title i {
+    color: var(--color-green);
+}
+.modal-close-btn {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-size: 1.25rem;
+    transition: color var(--transition-fast);
+}
+.modal-close-btn:hover {
+    color: var(--text-primary);
+}
+.modal-body {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: center;
+}
+.certificate-preview-container {
+    border: 2px dashed rgba(255, 255, 255, 0.1);
+    border-radius: var(--border-radius-md);
+    padding: 8px;
+    width: 100%;
+    max-width: 500px;
+    background: rgba(0, 0, 0, 0.2);
+    box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+}
+.modal-desc {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    text-align: center;
+    line-height: 1.4;
+}
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding-top: 16px;
+    margin-top: 4px;
+}
+.modal-footer .btn {
+    padding: 10px 20px;
+}
+.btn-download-cert {
+    justify-content: center;
+    text-decoration: none;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   INLINE STYLE REPLACEMENTS — Pledge Form
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.pledge-card .card-desc {
+    margin-bottom: 20px;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    line-height: 1.4;
+}
+.pledge-form-label {
+    margin-bottom: 8px;
+    display: block;
+    font-weight: 500;
+}
+.pledge-input-row {
+    display: flex;
+    gap: 12px;
+}
+.pledge-name-input {
+    text-align: left;
+    padding: 12px 16px;
+    flex: 1;
+    border: 1px solid var(--border-card);
+    border-radius: var(--border-radius-md);
+    background: rgba(0, 0, 0, 0.2);
+    color: var(--text-primary);
+}
+[data-theme="light"] .pledge-name-input {
+    background: rgba(255, 255, 255, 0.4);
+}
+.btn-generate-cert {
+    flex-shrink: 0;
+    justify-content: center;
+    padding: 12px 20px;
+}
+.input-error {
+    display: none;
+    color: var(--color-danger);
+    font-size: 0.8rem;
+    margin-top: 4px;
+}
+.input-error.visible {
+    display: block;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   INLINE STYLE REPLACEMENTS — Offset Card & Garden
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.offset-card .offset-desc {
+    margin-bottom: 16px;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    line-height: 1.4;
+}
+.garden-content {
+    min-height: 220px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+}
+.garden-footer {
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    padding-top: 10px;
+    margin-top: 10px;
+    text-align: center;
+}
+.garden-status-text {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+/* Utility classes to replace inline styles */
+.mt-6 {
+    margin-top: 24px;
+}
+
+.w-full {
+    width: 100%;
+}
+
+#confetti-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 2000;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   PREFERS-REDUCED-MOTION — Disable animations for accessibility
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    .blob { animation: none; opacity: 0.1; }
+    .cloud-drift { animation: none; }
+    .leaf-sway { animation: none; }
+    .sun-pulse { animation: none; }
+    .bird-fly { animation: none; }
+    .wind-sway { animation: none; }
+    .logo-icon-wrapper { animation: none; }
+    .cta-magic-icon { animation: none; }
+    .fade-in { opacity: 1; animation: none; }
+    .goal-status-badge.success { animation: none; }
+    .calc-step-view.active { animation: none; }
+}

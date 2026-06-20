@@ -1,7 +1,10 @@
 /**
- * CO2nserve Carbon Calculator Engine
+ * @module CarbonCalculator
+ * @description CO2nserve Carbon Calculator Engine.
  * Uses standardized emission factors based on EPA (Environmental Protection Agency)
  * and IPCC (Intergovernmental Panel on Climate Change) guidelines.
+ *
+ * Exposes `CarbonCalculator`, `sanitizeNumber`, and `sanitizeString` globally.
  */
 
 /* ─── Input Sanitization Helpers ──────────────────────────────────────────── */
@@ -13,7 +16,7 @@
  * @param {number} min      - Inclusive minimum
  * @param {number} max      - Inclusive maximum
  * @param {number} fallback - Value to use when parsing fails
- * @returns {number}
+ * @returns {number} Clamped numeric value within [min, max]
  */
 function sanitizeNumber(val, min, max, fallback) {
     const n = parseFloat(val);
@@ -27,7 +30,7 @@ function sanitizeNumber(val, min, max, fallback) {
  * @param {*}        val      - Raw input value
  * @param {string[]} allowed  - Permitted values
  * @param {string}   fallback - Value to use when validation fails
- * @returns {string}
+ * @returns {string} Validated string from the allow-list
  */
 function sanitizeString(val, allowed, fallback) {
     const s = String(val).trim();
@@ -36,47 +39,80 @@ function sanitizeString(val, allowed, fallback) {
 
 /* ─── Calculator Object ────────────────────────────────────────────────────── */
 
+/**
+ * @typedef {Object} TransportBreakdown
+ * @property {number} car     - Car emissions in tonnes CO₂e/yr
+ * @property {number} transit - Public transit emissions in tonnes CO₂e/yr
+ * @property {number} flights - Flight emissions in tonnes CO₂e/yr
+ * @property {number} total   - Total transport emissions in tonnes CO₂e/yr
+ */
+
+/**
+ * @typedef {Object} EnergyBreakdown
+ * @property {number} electricity - Grid electricity emissions in tonnes CO₂e/yr
+ * @property {number} heating     - Heating fuel emissions in tonnes CO₂e/yr
+ * @property {number} total       - Total energy emissions in tonnes CO₂e/yr
+ */
+
+/**
+ * @typedef {Object} CategoryBreakdown
+ * @property {TransportBreakdown} transport - Transport category
+ * @property {EnergyBreakdown}    energy    - Energy category
+ * @property {{total: number}}    food      - Food category with total in tonnes
+ * @property {{total: number}}    waste     - Waste category with total in tonnes
+ */
+
+/**
+ * @typedef {Object} CalculationResult
+ * @property {CategoryBreakdown} categories - Per-category breakdown
+ * @property {number}            total      - Grand total emissions in tonnes CO₂e/yr
+ */
+
+/**
+ * Stateless calculator engine. All methods are pure functions of their inputs.
+ * @namespace CarbonCalculator
+ */
 const CarbonCalculator = {
-    // EMISSION FACTORS (in kg CO2e per unit)
+    /** @description Emission factors in kg CO₂e per unit, sourced from EPA/IPCC. */
     FACTORS: {
-        // Cars (per mile)
+        /** Per-mile emission factors by vehicle fuel type (kg CO₂e/mile) */
         car: {
-            petrol:   0.38,  // kg CO2e per mile for average gasoline car
-            diesel:   0.35,  // kg CO2e per mile for average diesel car
-            hybrid:   0.20,  // kg CO2e per mile for hybrid car
-            electric: 0.08   // kg CO2e per mile (average grid lifecycle emissions)
+            petrol:   0.38,
+            diesel:   0.35,
+            hybrid:   0.20,
+            electric: 0.08
         },
 
-        // Public Transit (per passenger-mile)
-        transit: 0.09,       // average bus/rail transit blend
+        /** Average public transit blend per passenger-mile (kg CO₂e) */
+        transit: 0.09,
 
-        // Flights (flat kg CO2e per flight)
+        /** Flat per-flight emission factors (kg CO₂e per passenger flight) */
         flights: {
-            short: 150,      // < 3 hours (~150 kg per passenger flight)
-            long:  800       // > 3 hours (~800 kg per passenger flight)
+            short: 150,
+            long:  800
         },
 
-        // Grid Electricity (per kWh)
-        electricity: 0.38,   // US average electric grid intensity
+        /** US-average grid electricity intensity (kg CO₂e/kWh) */
+        electricity: 0.38,
 
-        // Heating fuels (per energy unit)
+        /** Heating fuel factors (kg CO₂e per energy unit) */
         heating: {
-            gas:      5.3,   // kg CO2e per therm of Natural Gas
-            oil:     10.1,   // kg CO2e per gallon of Heating Oil
-            biomass:  0.8,   // kg CO2e per lb of wood/pellets
-            electric: 0.38   // (tied to electricity factor)
+            gas:      5.3,
+            oil:     10.1,
+            biomass:  0.8,
+            electric: 0.38
         },
 
-        // Unit conversion configurations
+        /** Unit-price conversions for bill-to-consumption calculations */
         conversions: {
-            electricityPricePerKwh: 0.16, // average cost in USD
+            electricityPricePerKwh: 0.16,
             gasPricePerTherm:       1.20,
             oilPricePerGallon:      3.50,
             woodPricePerLb:         0.10,
-            transitMph:             20    // estimated average transit speed
+            transitMph:             20
         },
 
-        // Food Annual Baselines (in metric tonnes of CO2e per year)
+        /** Annual food baseline emissions by diet type (tonnes CO₂e/yr) */
         diet: {
             'heavy-meat':  3.4,
             'medium-meat': 2.8,
@@ -85,23 +121,23 @@ const CarbonCalculator = {
             vegan:         1.5
         },
 
-        // Consumption Annual Baselines (in metric tonnes of CO2e per year)
+        /** Annual shopping baseline emissions by consumption level (tonnes CO₂e/yr) */
         shopping: {
-            1: 0.5, // Minimalist
-            2: 1.0, // Frugal
-            3: 1.8, // Average
-            4: 2.6, // Frequent
-            5: 3.8  // High Spender
+            1: 0.5,
+            2: 1.0,
+            3: 1.8,
+            4: 2.6,
+            5: 3.8
         },
 
-        // Waste baseline & recycling savings (in tonnes per year)
+        /** Waste baseline & per-category recycling savings (tonnes CO₂e/yr) */
         waste: {
             baseline:         0.8,
-            recycleReduction: 0.15 // savings per material category recycled
+            recycleReduction: 0.15
         }
     },
 
-    /** Allowed values for enum-type inputs */
+    /** @description Allowed enum values for string-type inputs. */
     ALLOWED: {
         carType:       ['petrol', 'diesel', 'hybrid', 'electric'],
         heatingSource: ['gas', 'electric', 'oil', 'biomass', 'none'],
@@ -109,96 +145,116 @@ const CarbonCalculator = {
     },
 
     /**
+     * Heating fuel calculation lookup map.
+     * Each entry maps a fuel type to a function(bill, cleanEnergyShare) → tonnes CO₂e/yr.
+     * @private
+     */
+    _heatingCalcMap: null,
+
+    /**
+     * Lazily initialise and return the heating calculation lookup map.
+     * @private
+     * @returns {Object.<string, function(number, number): number>}
+     */
+    _getHeatingCalcMap() {
+        if (this._heatingCalcMap) return this._heatingCalcMap;
+
+        const F = this.FACTORS;
+        this._heatingCalcMap = {
+            gas: (bill) => {
+                const annualTherms = (bill / F.conversions.gasPricePerTherm) * 12;
+                return (annualTherms * F.heating.gas) / 1000;
+            },
+            oil: (bill) => {
+                const annualGallons = (bill / F.conversions.oilPricePerGallon) * 12;
+                return (annualGallons * F.heating.oil) / 1000;
+            },
+            biomass: (bill) => {
+                const annualLbs = (bill / F.conversions.woodPricePerLb) * 12;
+                return (annualLbs * F.heating.biomass) / 1000;
+            },
+            electric: (bill, cleanShare) => {
+                const annualHeatKwh = (bill / F.conversions.electricityPricePerKwh) * 12;
+                return (annualHeatKwh * F.electricity * (1 - cleanShare)) / 1000;
+            },
+            none: () => 0
+        };
+        return this._heatingCalcMap;
+    },
+
+    /**
      * Calculate carbon footprint based on UI inputs.
-     * @param {Object} inputs
-     * @returns {Object} Broken-down emissions in tonnes of CO2e per year
+     * @param {Object} inputs - User-provided lifestyle inputs
+     * @param {number}  inputs.carMiles         - Annual miles driven
+     * @param {string}  inputs.carType          - Vehicle fuel type
+     * @param {number}  inputs.transitHours     - Weekly public transit hours
+     * @param {number}  inputs.flightsShort     - Annual short-haul flights
+     * @param {number}  inputs.flightsLong      - Annual long-haul flights
+     * @param {number}  inputs.electricityBill  - Monthly electricity bill (USD)
+     * @param {number}  inputs.cleanEnergyShare - Percent of electricity from renewables
+     * @param {string}  inputs.heatingSource    - Primary heating fuel type
+     * @param {number}  inputs.heatingBill      - Monthly heating bill (USD)
+     * @param {string}  inputs.dietProfile      - Dietary lifestyle type
+     * @param {number}  inputs.localFoodPct     - Percent of food sourced locally
+     * @param {number}  inputs.shoppingHabits   - Consumption level (1–5)
+     * @param {boolean} inputs.recyclePaper     - Whether paper is recycled
+     * @param {boolean} inputs.recyclePlastic   - Whether plastics are recycled
+     * @param {boolean} inputs.recycleGlass     - Whether glass is recycled
+     * @param {boolean} inputs.recycleCompost   - Whether food waste is composted
+     * @returns {CalculationResult} Broken-down emissions in tonnes of CO₂e per year
      */
     calculate(inputs) {
-        // Initialize outputs (all in metric tonnes CO2e/year)
-        let transportCar     = 0;
-        let transportTransit = 0;
-        let transportFlights = 0;
-        let energyElectric   = 0;
-        let energyHeating    = 0;
-        let foodEmissions    = 0;
-        let wasteEmissions   = 0;
-
         // ── 1. TRANSPORTATION ──────────────────────────────────────────────
-        // Car: miles × factor. Convert kg → tonnes (÷ 1000)
         const carMiles  = sanitizeNumber(inputs.carMiles, 0, 100000, 0);
         const carType   = sanitizeString(inputs.carType, this.ALLOWED.carType, 'petrol');
         const carFactor = this.FACTORS.car[carType];
-        transportCar    = (carMiles * carFactor) / 1000;
+        const transportCar = (carMiles * carFactor) / 1000;
 
-        // Public Transit: weekly hours × speed × 52 weeks × factor → tonnes
-        const transitHours    = sanitizeNumber(inputs.transitHours, 0, 168, 0);
+        const transitHours     = sanitizeNumber(inputs.transitHours, 0, 168, 0);
         const transitMilesYear = transitHours * this.FACTORS.conversions.transitMph * 52;
-        transportTransit      = (transitMilesYear * this.FACTORS.transit) / 1000;
+        const transportTransit = (transitMilesYear * this.FACTORS.transit) / 1000;
 
-        // Flights: quantity × flat factors → tonnes
-        const flightsShort  = sanitizeNumber(inputs.flightsShort, 0, 365, 0);
-        const flightsLong   = sanitizeNumber(inputs.flightsLong,  0, 365, 0);
-        transportFlights    = ((flightsShort * this.FACTORS.flights.short) +
-                               (flightsLong  * this.FACTORS.flights.long)) / 1000;
+        const flightsShort   = sanitizeNumber(inputs.flightsShort, 0, 365, 0);
+        const flightsLong    = sanitizeNumber(inputs.flightsLong,  0, 365, 0);
+        const transportFlights = ((flightsShort * this.FACTORS.flights.short) +
+                                  (flightsLong  * this.FACTORS.flights.long)) / 1000;
 
         const totalTransport = transportCar + transportTransit + transportFlights;
 
         // ── 2. HOME ENERGY ─────────────────────────────────────────────────
-        const cleanEnergyShare  = sanitizeNumber(inputs.cleanEnergyShare, 0, 100, 0) / 100;
+        const cleanEnergyShare = sanitizeNumber(inputs.cleanEnergyShare, 0, 100, 0) / 100;
 
-        // Electricity: monthly bill → annual kWh → emissions × (1 − clean share)
         const electricityBill = sanitizeNumber(inputs.electricityBill, 0, 10000, 0);
         const annualKwh       = (electricityBill / this.FACTORS.conversions.electricityPricePerKwh) * 12;
-        energyElectric        = (annualKwh * this.FACTORS.electricity * (1 - cleanEnergyShare)) / 1000;
+        const energyElectric  = (annualKwh * this.FACTORS.electricity * (1 - cleanEnergyShare)) / 1000;
 
-        // Heating: monthly bill → annual energy → emissions
+        // Heating: use lookup map instead of if-else chain
         const heatingSource = sanitizeString(inputs.heatingSource, this.ALLOWED.heatingSource, 'none');
         const heatingBill   = sanitizeNumber(inputs.heatingBill, 0, 10000, 0);
-
-        if (heatingSource === 'gas') {
-            const annualTherms = (heatingBill / this.FACTORS.conversions.gasPricePerTherm) * 12;
-            energyHeating = (annualTherms * this.FACTORS.heating.gas) / 1000;
-        } else if (heatingSource === 'oil') {
-            const annualGallons = (heatingBill / this.FACTORS.conversions.oilPricePerGallon) * 12;
-            energyHeating = (annualGallons * this.FACTORS.heating.oil) / 1000;
-        } else if (heatingSource === 'biomass') {
-            const annualLbs = (heatingBill / this.FACTORS.conversions.woodPricePerLb) * 12;
-            energyHeating = (annualLbs * this.FACTORS.heating.biomass) / 1000;
-        } else if (heatingSource === 'electric') {
-            // Electric heating shares the electricity-grid intensity and clean-energy share
-            const annualHeatKwh = (heatingBill / this.FACTORS.conversions.electricityPricePerKwh) * 12;
-            energyHeating = (annualHeatKwh * this.FACTORS.electricity * (1 - cleanEnergyShare)) / 1000;
-        } else {
-            energyHeating = 0; // none
-        }
+        const heatingCalcFn = this._getHeatingCalcMap()[heatingSource];
+        const energyHeating = heatingCalcFn(heatingBill, cleanEnergyShare);
 
         const totalEnergy = energyElectric + energyHeating;
 
         // ── 3. DIET & FOOD ─────────────────────────────────────────────────
-        const dietType    = sanitizeString(inputs.dietProfile, this.ALLOWED.dietProfile, 'medium-meat');
+        const dietType     = sanitizeString(inputs.dietProfile, this.ALLOWED.dietProfile, 'medium-meat');
         const dietBaseline = this.FACTORS.diet[dietType];
-
-        // Local sourcing discount: up to 10 % reduction of food emissions
         const localFoodPct = sanitizeNumber(inputs.localFoodPct, 0, 100, 0) / 100;
-        foodEmissions = dietBaseline * (1.0 - (0.10 * localFoodPct));
+        const foodEmissions = dietBaseline * (1.0 - (0.10 * localFoodPct));
 
         // ── 4. WASTE & CONSUMPTION ─────────────────────────────────────────
-        const shoppingLevel   = sanitizeNumber(inputs.shoppingHabits, 1, 5, 3);
-        const shoppingInt     = Math.round(shoppingLevel);           // must be an integer key
+        const shoppingLevel    = sanitizeNumber(inputs.shoppingHabits, 1, 5, 3);
+        const shoppingInt      = Math.round(shoppingLevel);
         const shoppingBaseline = this.FACTORS.shopping[shoppingInt] || this.FACTORS.shopping[3];
 
-        const recyclePaper   = !!inputs.recyclePaper;
-        const recyclePlastic = !!inputs.recyclePlastic;
-        const recycleGlass   = !!inputs.recycleGlass;
-        const recycleCompost = !!inputs.recycleCompost;
-
-        let recyclingDiscount = 0;
-        if (recyclePaper)   recyclingDiscount += this.FACTORS.waste.recycleReduction;
-        if (recyclePlastic) recyclingDiscount += this.FACTORS.waste.recycleReduction;
-        if (recycleGlass)   recyclingDiscount += this.FACTORS.waste.recycleReduction;
-        if (recycleCompost) recyclingDiscount += this.FACTORS.waste.recycleReduction;
-
-        wasteEmissions = shoppingBaseline + Math.max(0.2, this.FACTORS.waste.baseline - recyclingDiscount);
+        const recycleFlags = [
+            !!inputs.recyclePaper,
+            !!inputs.recyclePlastic,
+            !!inputs.recycleGlass,
+            !!inputs.recycleCompost
+        ];
+        const recyclingDiscount = recycleFlags.filter(Boolean).length * this.FACTORS.waste.recycleReduction;
+        const wasteEmissions = shoppingBaseline + Math.max(0.2, this.FACTORS.waste.baseline - recyclingDiscount);
 
         // ── TOTALS & BREAKDOWN ─────────────────────────────────────────────
         const total = totalTransport + totalEnergy + foodEmissions + wasteEmissions;
